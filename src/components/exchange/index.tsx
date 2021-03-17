@@ -243,12 +243,17 @@ export function ExchangeModal(props: IExchangeModalProps) {
 					handleGetBalance(exchangeState.account, exchangeState.tokenAddress);
 
 					const data = getLocal('gtOrders');
-					result.token = exchangeState.currency;
-					result.decimals = exchangeState.decimals;
-					result.symbol = getPairs[0]['symbol'];
-					result.amount = value;
-					result.fromLogo = getPairs[0]['logo'];
-					result.toLogo = getPairs[1]['logo'];
+					result.fromChain = {
+						...getPairs[0]
+					}
+					result.toChain = {
+						...getPairs[1]
+					}
+					result.internal = {
+						token: exchangeState.currency,
+						decimals: exchangeState.decimals,
+						amount: value
+					}
 
 					if(data){
 						data.unshift(result);

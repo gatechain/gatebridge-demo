@@ -128,23 +128,30 @@ const tHeader = [
 	}
 ];
 
-const TdItem = function ({fee, token, from, to, fromLogo, toLogo, amount,symbol}: {fee: string, token: string,from:string, to: string,amount: string,fromLogo:string,toLogo:string,symbol:string}) {
+const TdItem = function ({fee, token, from, to, fromChain, toChain, amount, internal}: {fee: string, token: string,from:string, to: string,amount: string,fromChain:any,toChain:any,internal :any}) {
 	const theme = React.useContext(ThemeContext);
+	const handleAddress = React.useCallback((address: string, symbol: string) => {
+		let currSymbol = symbol.toLocaleLowerCase() || 'eth';
+		if(currSymbol == 'gt') currSymbol = 'gt_evm';
+		let url = 'https://block.info/explorer/'+currSymbol+'/address/' + address;
+		window.open(url);
+	}, [])
+
 	return <>
 		{
 			tHeader.map((cItem, cIndex) => {
 				return <HMtd key={cIndex}>
 					{
-						cItem.props === 'asset' ? token : ''
+						cItem.props === 'asset' ? internal.token : ''
 					}
 					{
 						cItem.props === 'from' ? <HMfromOrToBox>
-							<HMamount>{amount} {token}</HMamount>
+							<HMamount>{amount} {internal.token}</HMamount>
 							<HMAddressBox>
 								{
-									fromLogo ? 	<HMLogo src={fromLogo} /> :  <HelpCircle size={16} color={theme.text6}/>
+									fromChain.logo ? 	<HMLogo src={fromChain.logo} /> :  <HelpCircle size={16} color={theme.text6}/>
 								}
-								Address: <HMAddress>{from.slice(0, 8)}...{from.slice(-8)}</HMAddress>
+								Address: <HMAddress onClick={() => handleAddress(from, fromChain.symbol)}>{from.slice(0, 8)}...{from.slice(-8)}</HMAddress>
 							</HMAddressBox>
 						</HMfromOrToBox> : ''
 					}
@@ -153,17 +160,17 @@ const TdItem = function ({fee, token, from, to, fromLogo, toLogo, amount,symbol}
 					}
 					{
 						cItem.props === 'to' ? <HMfromOrToBox>
-							<HMamount><HMamount>{amount} {token}</HMamount></HMamount>
+							<HMamount><HMamount>{amount} {internal.token}</HMamount></HMamount>
 							<HMAddressBox>
 								{
-									toLogo ? 	<HMLogo src={toLogo} /> :  <HelpCircle size={16} color={theme.text6}/>
+									toChain.logo ? 	<HMLogo src={toChain.logo} /> :  <HelpCircle size={16} color={theme.text6}/>
 								}
-								Address: <HMAddress>{to.slice(0, 8)}...{to.slice(-8)}</HMAddress>
+								Address: <HMAddress onClick={() => handleAddress(to, toChain.symbol)}>{to.slice(0, 8)}...{to.slice(-8)}</HMAddress>
 							</HMAddressBox>
 						</HMfromOrToBox> : ''
 					}
 					{
-						cItem.props === 'fee' ? fee + ' ' + symbol  : ''
+						cItem.props === 'fee' ? fee + ' ' + fromChain.symbol  : ''
 					}
 				</HMtd>
 			})
@@ -178,8 +185,8 @@ export function HistoryModal(props: IHistoryModalProps) {
 		let gtOrders = getLocal('gtOrders');
 		if(gtOrders){
 			gtOrders.forEach((item: any) => {
-				item.fee = new BigNumber(Number((item.value.hex).toString(10))).dividedBy(Math.pow(10, item.decimals)).toString(10);
-				item.amount = new BigNumber(Number(item.amount)).dividedBy(Math.pow(10, item.decimals)).toString(10);
+				item.fee = new BigNumber(Number((item.value.hex).toString(10))).dividedBy(Math.pow(10, item.fromChain.decimals)).toString(10);
+				item.amount = new BigNumber(Number(item.internal.amount)).dividedBy(Math.pow(10, item.internal.decimals)).toString(10);
 			})
 			setOrders(gtOrders);
 		}

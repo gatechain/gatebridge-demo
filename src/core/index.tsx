@@ -62,9 +62,9 @@ export class Core {
 	}
 
 
-	public renderExchange(wrapper?:HTMLHtmlElement){
+	public async renderExchange(wrapper?:HTMLHtmlElement){
 		const {themeColors} = this;
-		this.clearRender();
+		await this.clearRender();
 		const fragment = document.createDocumentFragment();
 		const el = document.createElement("div");
 		el.id = BRIDGE_EXCHANGE_MODAL_ID;
@@ -78,9 +78,9 @@ export class Core {
 			,document.getElementById(BRIDGE_EXCHANGE_MODAL_ID));
 	}
 
-	public renderHistory(wrapper?:HTMLHtmlElement) {
+	public async renderHistory(wrapper?:HTMLHtmlElement) {
 		const {themeColors} = this;
-		this.clearRender();
+		await this.clearRender();
 		const fragment = document.createDocumentFragment();
 		const el = document.createElement("div");
 		el.id = BRIDGE_HISTORY_MODAL_ID;
@@ -88,13 +88,12 @@ export class Core {
 		wrapper ? wrapper.appendChild(el) : document.body.appendChild(el);
 		ReactDOM.render(<HistoryModal  themeColors={themeColors} />,document.getElementById(BRIDGE_HISTORY_MODAL_ID));
 	}
-	private clearRender(){
-		if(document.getElementById(BRIDGE_HISTORY_MODAL_ID)){
-			document.getElementById(BRIDGE_HISTORY_MODAL_ID)?.remove();
-		}
-		if(document.getElementById(BRIDGE_EXCHANGE_MODAL_ID)){
-			document.getElementById(BRIDGE_EXCHANGE_MODAL_ID)?.remove();
-		}
+	private async clearRender(){
+		const HISTORY = document.getElementById(BRIDGE_HISTORY_MODAL_ID);
+		const EXCHANGE = document.getElementById(BRIDGE_EXCHANGE_MODAL_ID);
+		HISTORY && ReactDOM.unmountComponentAtNode(HISTORY);
+		EXCHANGE && ReactDOM.unmountComponentAtNode(EXCHANGE);
+		return true;
 	}
 	// private mergeDefaultThemeColors(theme: IThemesConfig[]): void {
 	// 	console.log(theme, setThemeColors);
