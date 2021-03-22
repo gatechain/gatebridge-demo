@@ -22,50 +22,50 @@ const gateBridge = new Bridge({...params})
   assetApplyLink : 'http://xxxx', //用户增加token地址
   gateLink: 'http://xxxx', //gate.io地址
   chainRule: { // 跨链白名单
-    '1->66': {
-        tips: ''
+    '5->1337': {
+        tips: '',
+        destChainId: 78
     },
-    '66->1': {
-        tips:'Gate.io has supported asset exchange between different chains with lower service fees. Deposit your asset and withdraw what you want.'
+    '1337->5': {
+        tips:'Gate.io has supported asset exchange between different chains with lower service fees. Deposit your asset and withdraw what you want.',
+        destChainId: 5
     }
   },
   pairs: [
     {
-        name: 'Ethereum',
-        chainId: 1,
-        symbol: 'ETH',
-        logo:  '',
-        bridgeAddress: '',
-        handler: '0xcA306fc3c3b28d837bf65f026fE8bE1cd42c0f38',
-        decimals: 18,
+    	name: 'Ethereum',
+       chainId: 5,
+       symbol: 'ETH',
+       logo:  '',
+       bridgeAddress: '0x219e350a5b58612BF968aa1F5aFF1e52856d687a',
+       handler: '0x8922A6e52c35982cA598c4d1a725eE3775127ABa',
+       decimals: 18,
         assetList: [
-            {
-                symbol: "USDT",
+             {
+                symbol: "WENUS",
+                name: "wenus",
                 logo: '',
-                name: "USDT",
-                decimals: "10",
-                address: '0x65B954882BDC6efEf3eF2027027d895201236671',
-                balance: 0
-            },
+                decimals: "18",
+                address: '0xaFF4481D10270F50f203E0763e2597776068CBc5'
+             },
         ]
     },
     {
-        name: 'Ethereum',
-        chainId: 1,
-        symbol: 'ETH',
-        logo:  '',
-        bridgeAddress: '',
-        handler: '0xcA306fc3c3b28d837bf65f026fE8bE1cd42c0f38',
-        decimals: 18,
+    	name: 'GateChain',
+       chainId: 1337,
+       symbol: 'GT',
+       logo:  '',
+       decimals: 18,
+       bridgeAddress: '0x830C57Bc09f137eF2cFC7c3797aA62FDA071c94A',
+       handler: '0x417306de14Bf393DF5d747ee555F8D4d2C3c3D83',
         assetList: [
-            {
-                symbol: "USDT",
-                logo: '',
-                name: "USDT",
-                decimals: "10",
-                address: '0x65B954882BDC6efEf3eF2027027d895201236671',
-                balance: 0
-            },
+        {
+           symbol: "WENUS",
+           name: "wenus",
+           logo: '',
+           decimals: "18",
+           address: '0x2d2490D29DBBCC0751033A76fE7906D63140Ce2d'
+         },
         ]
      },
  ]

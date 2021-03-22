@@ -77,7 +77,6 @@ export interface IAssetParam {
     name: string;
     decimals: string;
     address: string;
-    balance: number;
     logo: string;
 }
 export interface ICurrencys {
@@ -90,5 +89,6 @@ export interface ICurrencys {
     fee: string;
     decimals: number;
     balance: number;
+    destChainId: number;
 }
 //# sourceMappingURL=types.d.ts.map

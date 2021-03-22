@@ -90,7 +90,6 @@ export interface IAssetParam {
 	name: string,
 	decimals: string,
 	address: string,
-	balance: number,
 	logo: string
 }
 
@@ -104,4 +103,5 @@ export interface ICurrencys {
 	fee: string,
 	decimals: number,
 	balance: number,
+	destChainId: number
 }

@@ -131,6 +131,7 @@ const exchangeState: ICurrencys = {
 	amount: '',
 	account: '',
 	fee: '0.0',
+	destChainId: 0
 };
 
 
@@ -207,6 +208,7 @@ export function ExchangeModal(props: IExchangeModalProps) {
 	},[])
 
 	const handleSendApprove = React.useCallback(async (token: string, handler:string, decimals: number) => {
+		debugger;
 		if(bridge){
 			try{
 				const result =  await (bridge as any).approve(token, handler, MaxUint256);
@@ -357,13 +359,13 @@ export function ExchangeModal(props: IExchangeModalProps) {
 		const ruleKey = onePair['chainId'] + '->' + twoPair['chainId'];
 		if(!getChainRule[ruleKey]){
 			setErrRuleChainId(true);
-
+			exchangeState.destChainId = 0;
 			if(messageState){
 				hideMessage()
 			}
-
 		} else {
 			setErrRuleChainId(false);
+			exchangeState.destChainId = getChainRule[ruleKey]['destChainId'];
 			if(getChainRule[ruleKey]['tips']){
 				setMessageState({
 					warning: true,
@@ -476,7 +478,7 @@ export function ExchangeModal(props: IExchangeModalProps) {
 	const handleApprove =  React.useCallback(() => {
 		setApprovePending(true);
 		handleSendApprove(exchangeState.tokenAddress, getPairs[0]['handler'], exchangeState.decimals)
-	},[])
+	},[getPairs])
 
 	const handleWillReceive =  React.useCallback(() => {
 		handleGetFee(getPairs[0]['bridgeAddress'], getPairs[0]['decimals']);
@@ -491,7 +493,7 @@ export function ExchangeModal(props: IExchangeModalProps) {
 		const fee = new BigNumber(Number(exchangeState.fee)).multipliedBy(new BigNumber(10).pow(getPairs[0]['decimals'])).toString(10);
 		const amount = new BigNumber(Number(exchangeState.amount)).multipliedBy(new BigNumber(10).pow(exchangeState.decimals)).toString(10);
 		setConfirmPending(true);
-		handleSendDeposit(getPairs[0]['chainId'], getPairs[0]['bridgeAddress'], exchangeState.resourceId, exchangeState.account, fee, amount);
+		handleSendDeposit(exchangeState.destChainId, getPairs[0]['bridgeAddress'], exchangeState.resourceId, exchangeState.account, fee, amount);
 	}, [getPairs]);
 
 
