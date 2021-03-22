@@ -230,10 +230,11 @@ export function ExchangeModal(props: IExchangeModalProps) {
 		}
 	},[])
 
-	const handleSendDeposit = React.useCallback(async (bridgeAddress: string, resourceId:string, recipient: string, fee:string, value:string) => {
+	const handleSendDeposit = React.useCallback(async (chainId: number | undefined, bridgeAddress: string, resourceId:string, recipient: string, fee:string, value:string) => {
 		if(bridge){
 			try{
-				const result =  await (bridge as any).deposit(bridgeAddress, resourceId, recipient, fee, value);
+				if(!chainId) return;
+				const result =  await (bridge as any).deposit(chainId, bridgeAddress, resourceId, recipient, fee, value);
 				if(result){
 					setShowConfigModal(false);
 					const state = Object.assign({}, exchangeFromState);
@@ -490,7 +491,7 @@ export function ExchangeModal(props: IExchangeModalProps) {
 		const fee = new BigNumber(Number(exchangeState.fee)).multipliedBy(new BigNumber(10).pow(getPairs[0]['decimals'])).toString(10);
 		const amount = new BigNumber(Number(exchangeState.amount)).multipliedBy(new BigNumber(10).pow(exchangeState.decimals)).toString(10);
 		setConfirmPending(true);
-		handleSendDeposit(getPairs[0]['bridgeAddress'], exchangeState.resourceId, exchangeState.account, fee, amount);
+		handleSendDeposit(getPairs[0]['chainId'], getPairs[0]['bridgeAddress'], exchangeState.resourceId, exchangeState.account, fee, amount);
 	}, [getPairs]);
 
 
