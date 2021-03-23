@@ -208,7 +208,6 @@ export function ExchangeModal(props: IExchangeModalProps) {
 	},[])
 
 	const handleSendApprove = React.useCallback(async (token: string, handler:string, decimals: number) => {
-		debugger;
 		if(bridge){
 			try{
 				const result =  await (bridge as any).approve(token, handler, MaxUint256);
