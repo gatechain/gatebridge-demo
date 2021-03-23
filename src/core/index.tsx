@@ -57,8 +57,6 @@ export class Core {
 		}
 
 		this.themeColors = getThemeColors( initCoreState['themeName']);
-		this.renderExchange();
-		// this.renderHistory();
 	}
 
 
