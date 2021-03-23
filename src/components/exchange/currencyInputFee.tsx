@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from "styled-components";
 import {IPairParam} from "../../helpers";
+import {I18nContext} from "../../providers";
 
 const CFeeLayout = styled.div`
   margin-bottom: 60px;
@@ -34,14 +35,15 @@ const CFeeDesc = styled.div`
 `;
 
 export default function CurrencyInputFee({value, pairs}: {value:string, pairs:IPairParam[]}) {
+	const $i18n = React.useContext<any>(I18nContext);
 	return (
 		<CFeeLayout>
 			<EText>
-				Service Fee
+				{$i18n['fee']}
 			</EText>
 			<CFeeInput disabled value={value + ' ' + pairs[0]['symbol']}  placeholder='0.0'/>
 			<CFeeDesc>
-				The fee use to send token to your destination address from the contract on {pairs[1]['name']} network
+				{$i18n['feeDesc'](pairs[1]['name'])}
 			</CFeeDesc>
 		</CFeeLayout>
 	)

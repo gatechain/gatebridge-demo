@@ -22,7 +22,7 @@ import {useWeb3React} from "@web3-react/core";
 import {injected} from '../../connectors';
 import Loader  from "../loader";
 import {MaxUint256} from '../../constants';
-import {ConfigContext} from '../../providers';
+import {ConfigContext, I18nContext} from '../../providers';
 
 const ELayout = styled.div`
 		font-family: PingFangSC, PingFangSC-Medium, sans-serif;
@@ -141,6 +141,7 @@ let copyCurrentAssetList:IAssetParam[] = [];
 export function ExchangeModal(props: IExchangeModalProps) {
 	const {themeColors, pairs} = props;
 	const {chainRule: getChainRule, gateLink: gateLinkUrl} = React.useContext<any>(ConfigContext);
+	const $i18n = React.useContext<any>(I18nContext);
 	const { activate: activateNetwork, chainId, library } = useWeb3React();
 	const [exchangeFromState, setExchangeFromState] = React.useState(exchangeState);
 	const [getPairs, setPairs] =  React.useState(pairs);
@@ -502,7 +503,7 @@ export function ExchangeModal(props: IExchangeModalProps) {
 				<ExchangeMain>
 					<RowVerticalEnd>
 						<div>
-							<Etext>From</Etext>
+							<Etext>{$i18n['from']}</Etext>
 							<CurrentCoin {...getPairs[0]} errorChainId={matchChainId}/>
 						</div>
 						<EchangeBtnBox>
@@ -511,18 +512,18 @@ export function ExchangeModal(props: IExchangeModalProps) {
 							</EchangeButton>
 						</EchangeBtnBox>
 						<div>
-							<Etext>To</Etext>
+							<Etext>{$i18n['to']}</Etext>
 							<CurrentCoin {...getPairs[1]} errorChainId={errRuleChainId}/>
 						</div>
 
 						{
 							matchChainId ?
-								<ErrorTips><Message msg='the trading network does not match the network you are currently connected to' error={true}/> </ErrorTips> : null
+								<ErrorTips><Message msg={$i18n['notMatch']} error={true}/> </ErrorTips> : null
 						}
 
 						{
 							errRuleChainId ?
-								<ErrorTips><Message msg="two chains that cannot be exchanged" error={true}/> </ErrorTips> : null
+								<ErrorTips><Message msg={$i18n['notExchanged']} error={true}/> </ErrorTips> : null
 						}
 
 					</RowVerticalEnd>
@@ -532,14 +533,14 @@ export function ExchangeModal(props: IExchangeModalProps) {
 					<CurrencyInputFee value={exchangeFromState.fee} pairs={getPairs}/>
 					{
 						!account ? 	<ButtonPrimary onClick={handleConnectWallet} disabled={isConnect}>
-							<span style={{marginRight: '5px'}}>Connect Wallet</span>
+							<span style={{marginRight: '5px'}}>{$i18n['connect']}</span>
 							{isConnect ? <Loader /> : null}
 						</ButtonPrimary> : isApprove ?
 							<ButtonPrimary onClick={handleApprove} disabled={approvePending || errRuleChainId || !Number(exchangeFromState.amount) || errorAmount}>
-								<span style={{marginRight: '5px'}}>Approve</span>
+								<span style={{marginRight: '5px'}}>{$i18n['approve']}</span>
 								{approvePending ? <Loader /> : null}
 							</ButtonPrimary>
-							: <ButtonPrimary onClick={handleWillReceive} disabled={matchChainId || errRuleChainId || !Number(exchangeFromState.amount) || errorAmount}>Next</ButtonPrimary>
+							: <ButtonPrimary onClick={handleWillReceive} disabled={matchChainId || errRuleChainId || !Number(exchangeFromState.amount) || errorAmount}>{$i18n['next']}</ButtonPrimary>
 					}
 
 					{
@@ -550,7 +551,7 @@ export function ExchangeModal(props: IExchangeModalProps) {
 
 				</ExchangeMain>
 				<CrossChainDesc>
-					Cross-chain BTC, BCH and other assets to GATECHAIN network, please go to
+					{$i18n['bridgeDesc']}
 					<AGateLink href={gateLinkUrl} target="_blank">
 						<CrossChainLogo src={gateLogo} />
 					</AGateLink>

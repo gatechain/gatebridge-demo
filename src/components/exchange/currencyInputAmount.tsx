@@ -4,6 +4,7 @@ import {RowBetween} from '../row';
 import { darken } from 'polished'
 import {escapeRegExp, ICurrencys} from '../../helpers';
 import {HelpCircle} from "react-feather";
+import {I18nContext} from "../../providers";
 
 const CAmountLayout = styled.div`
   margin-bottom: 40px;
@@ -98,6 +99,8 @@ export default function CurrencyInputAmount({value, onUserInput,onMax,currencys,
 	error?: boolean
 }) {
 	const theme = React.useContext(ThemeContext);
+	const $i18n = React.useContext<any>(I18nContext);
+
 	const {logo, currency, balance} = currencys
 	const enforcer = (nextUserInput: string) => {
 		if (nextUserInput === '' || inputRegex.test(escapeRegExp(nextUserInput))) {
@@ -108,10 +111,10 @@ export default function CurrencyInputAmount({value, onUserInput,onMax,currencys,
 		<CAmountLayout >
 			<RowBetween>
 				<EText>
-					Amount
+					{$i18n['amount']}
 				</EText>
 				<CAvaliavle>
-					Available: {Number(balance).toLocaleString()} {currency}
+					{$i18n['available']}: {Number(balance).toLocaleString()} {currency}
 				</CAvaliavle>
 			</RowBetween>
 			<CAmountBox>
@@ -134,10 +137,10 @@ export default function CurrencyInputAmount({value, onUserInput,onMax,currencys,
 					maxLength={79}
 					spellCheck="false"
 		    />
-				<CMaxButton onClick={onMax}>MAX</CMaxButton>
+				<CMaxButton onClick={onMax}>{$i18n['max']}</CMaxButton>
 			</CAmountBox>
 			<CReceiveBox>
-				You will receive ≈
+				{$i18n['receive1'] } ≈
 				<CurrencyLogoBox>
 					{logo ? <CurrencyLogo src={logo} /> : <HelpCircle size={14} color={theme.text6}/>}
 				</CurrencyLogoBox>

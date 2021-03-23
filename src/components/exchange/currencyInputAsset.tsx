@@ -3,6 +3,7 @@ import styled,{ThemeContext} from 'styled-components';
 import { ChevronDown, HelpCircle } from 'react-feather';
 import { darken } from 'polished';
 import {ICurrencys} from "../../helpers";
+import {I18nContext} from '../../providers';
 
 const CAssetLayout = styled.div`
   margin: 40px auto;
@@ -67,8 +68,9 @@ interface ICurrencyInputAssetProps {
 export default function CurrencyInputAsset (props: ICurrencyInputAssetProps){
 	const {onShowCurrentSearch, currencys: {logo, currency}} = props;
 	const theme = React.useContext(ThemeContext);
+	const $i18n = React.useContext<any>(I18nContext);
 	return <CAssetLayout>
-			    <EText>Asset</EText>
+			    <EText>{$i18n['asset']}</EText>
 				  <InputRow
 					  selected={false}
 					  className="open-currency-select-button"
@@ -79,7 +81,7 @@ export default function CurrencyInputAsset (props: ICurrencyInputAssetProps){
 						  {
 							  currency ?
 								   <>{logo ? <CurrencyLogo src={logo} /> : <HelpCircle size={20} color={theme.text6}/>}
-								  <CurrencyLabel> {currency}</CurrencyLabel></> : <Placeholder>select token</Placeholder>
+								  <CurrencyLabel> {currency}</CurrencyLabel></> : <Placeholder>{$i18n['selectToken']}</Placeholder>
 						  }
 
 					  </CurrencyBox>

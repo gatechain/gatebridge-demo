@@ -21,6 +21,7 @@ const gateBridge = new Bridge({...params})
 {
   assetApplyLink : 'http://xxxx', //用户增加token地址
   gateLink: 'http://xxxx', //gate.io地址
+  locale: 'en', // 默认zh
   chainRule: { // 跨链白名单
     '5->1337': {
         tips: '',

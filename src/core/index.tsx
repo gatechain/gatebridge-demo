@@ -5,14 +5,15 @@ import  {BRIDGE_EXCHANGE_MODAL_ID, BRIDGE_HISTORY_MODAL_ID} from '../constants';
 import {  getThemeColors, ThemeColors, IPairsParam} from '../helpers';
 import {Web3ReactProvider} from "@web3-react/core";
 import {Web3Provider} from "@ethersproject/providers";
-import {ConfigContext} from '../providers';
-
+import {ConfigContext, I18nContext} from '../providers';
+import languages from '../locales';
 interface ICoreProps {
 	gateLink: string,
 	assetApplyLink: string,
 	// customTheme?: IThemesConfig[],
 	pairs: IPairsParam[],
-	chainRule: object
+	chainRule: object,
+	locale: string
 }
 
 const initCoreState = {
@@ -21,7 +22,8 @@ const initCoreState = {
 	pairs: [],
 	chainRule: {},
 	gateLink: '',
-	assetApplyLink: ''
+	assetApplyLink: '',
+	locale: 'zh',
 };
 
 function getLibrary(provider: any): Web3Provider {
@@ -34,7 +36,7 @@ export class Core {
 	private themeColors: ThemeColors;
 	constructor(opts: ICoreProps) {
 		if(opts){
-			const {pairs, chainRule, gateLink, assetApplyLink} = opts;
+			const {pairs, chainRule, gateLink, assetApplyLink, locale} = opts;
 			// if(customTheme){
 			// 	this.mergeDefaultThemeColors(customTheme);
 			// 	initCoreState['themeName'] = theme.name;
@@ -54,9 +56,14 @@ export class Core {
 			if(assetApplyLink){
 				(initCoreState as any )['assetApplyLink'] = assetApplyLink;
 			}
+
+			if(locale){
+				(initCoreState as any )['locale'] = locale;
+			}
 		}
 
 		this.themeColors = getThemeColors( initCoreState['themeName']);
+
 	}
 
 
@@ -69,9 +76,11 @@ export class Core {
 		fragment.appendChild(el);
 		wrapper ? wrapper.appendChild(el) : document.body.appendChild(el);
 		ReactDOM.render(<ConfigContext.Provider value={{...initCoreState}}>
-			<Web3ReactProvider  getLibrary={getLibrary}>
-				  <ExchangeModal  themeColors={themeColors}  pairs={initCoreState.pairs}/>
-				</Web3ReactProvider>
+			<I18nContext.Provider value={{...languages[initCoreState['locale']]}}>
+				<Web3ReactProvider  getLibrary={getLibrary}>
+					  <ExchangeModal  themeColors={themeColors}  pairs={initCoreState.pairs}/>
+					</Web3ReactProvider>
+			</I18nContext.Provider>
 			</ConfigContext.Provider>
 			,document.getElementById(BRIDGE_EXCHANGE_MODAL_ID));
 	}
@@ -84,7 +93,7 @@ export class Core {
 		el.id = BRIDGE_HISTORY_MODAL_ID;
 		fragment.appendChild(el);
 		wrapper ? wrapper.appendChild(el) : document.body.appendChild(el);
-		ReactDOM.render(<HistoryModal  themeColors={themeColors} />,document.getElementById(BRIDGE_HISTORY_MODAL_ID));
+		ReactDOM.render(	<I18nContext.Provider value={{...languages[initCoreState['locale']]}}><HistoryModal  themeColors={themeColors} /></I18nContext.Provider>,document.getElementById(BRIDGE_HISTORY_MODAL_ID));
 	}
 	private async clearRender(){
 		const HISTORY = document.getElementById(BRIDGE_HISTORY_MODAL_ID);

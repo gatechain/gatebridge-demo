@@ -3,6 +3,7 @@ import styled, {ThemeContext, ThemeProvider as StyledComponentsThemeProvider} fr
 import { ThemeColors,getLocal } from "../../helpers";
 import {BigNumber} from "bignumber.js";
 import {ArrowRightCircle, HelpCircle} from 'react-feather';
+import {I18nContext} from "../../providers";
 
 const HLayout = styled.div`
  font-family: PingFangSC, PingFangSC-Medium, sans-serif;
@@ -104,32 +105,12 @@ function ThemeProvider({children, themeColors}: {children: React.ReactNode, them
 interface IHistoryModalProps {
 	themeColors: ThemeColors;
 }
-const tHeader = [
-	{
-		props: 'asset',
-		label: 'Asset'
-	},
-	{
-		props: 'from',
-		label: 'Amount/From (Address)'
-	},
-	{
-		props: 'arrow',
-		label: '',
-		width: '120px'
-	},
-	{
-		props: 'to',
-		label: 'Amount/To (Address)'
-	},
-	{
-		props: 'fee',
-		label: 'Service Fee'
-	}
-];
+
+var tHeader: any;
 
 const TdItem = function ({fee, token, from, to, fromChain, toChain, amount, internal}: {fee: string, token: string,from:string, to: string,amount: string,fromChain:any,toChain:any,internal :any}) {
 	const theme = React.useContext(ThemeContext);
+	const $i18n = React.useContext<any>(I18nContext);
 	const handleAddress = React.useCallback((address: string, symbol: string) => {
 		let currSymbol = symbol.toLocaleLowerCase() || 'eth';
 		if(currSymbol == 'gt') currSymbol = 'gt_evm';
@@ -139,7 +120,7 @@ const TdItem = function ({fee, token, from, to, fromChain, toChain, amount, inte
 
 	return <>
 		{
-			tHeader.map((cItem, cIndex) => {
+			tHeader && tHeader.map((cItem: any, cIndex: number) => {
 				return <HMtd key={cIndex}>
 					{
 						cItem.props === 'asset' ? internal.token : ''
@@ -149,9 +130,9 @@ const TdItem = function ({fee, token, from, to, fromChain, toChain, amount, inte
 							<HMamount>{amount} {internal.token}</HMamount>
 							<HMAddressBox>
 								{
-									fromChain.logo ? 	<HMLogo src={fromChain.logo} /> :  <HelpCircle size={16} color={theme.text6}/>
+									fromChain.logo ? 	<HMLogo src={fromChain.logo} /> :  <HelpCircle size={16} color={theme.text6} />
 								}
-								Address: <HMAddress onClick={() => handleAddress(from, fromChain.symbol)}>{from.slice(0, 8)}...{from.slice(-8)}</HMAddress>
+								{$i18n['address']}: <HMAddress onClick={() => handleAddress(from, fromChain.symbol)}>{from.slice(0, 8)}...{from.slice(-8)}</HMAddress>
 							</HMAddressBox>
 						</HMfromOrToBox> : ''
 					}
@@ -165,7 +146,7 @@ const TdItem = function ({fee, token, from, to, fromChain, toChain, amount, inte
 								{
 									toChain.logo ? 	<HMLogo src={toChain.logo} /> :  <HelpCircle size={16} color={theme.text6}/>
 								}
-								Address: <HMAddress onClick={() => handleAddress(to, toChain.symbol)}>{to.slice(0, 8)}...{to.slice(-8)}</HMAddress>
+								{$i18n['address']}: <HMAddress onClick={() => handleAddress(to, toChain.symbol)}>{to.slice(0, 8)}...{to.slice(-8)}</HMAddress>
 							</HMAddressBox>
 						</HMfromOrToBox> : ''
 					}
@@ -180,7 +161,32 @@ const TdItem = function ({fee, token, from, to, fromChain, toChain, amount, inte
 
 export function HistoryModal(props: IHistoryModalProps) {
 	const {themeColors} = props;
+	const $i18n = React.useContext<any>(I18nContext);
 	const [orders, setOrders] = React.useState( []);
+	 tHeader = [
+		{
+			props: 'asset',
+			label: $i18n['asset']
+		},
+		{
+			props: 'from',
+			label: $i18n['amount'] + '/' + $i18n['from'] + '(' + $i18n['address'] + ')'
+		},
+		{
+			props: 'arrow',
+			label: '',
+			width: '120px'
+		},
+		{
+			props: 'to',
+			label: $i18n['amount'] + '/' + $i18n['to'] + '(' + $i18n['address'] + ')'
+		},
+		{
+			props: 'fee',
+			label: $i18n['fee']
+		}
+	];
+
 	React.useEffect(() => {
 		let gtOrders = getLocal('gtOrders');
 		if(gtOrders){
@@ -200,7 +206,7 @@ export function HistoryModal(props: IHistoryModalProps) {
 						<HMthead>
 							<HMtr>
 								{
-									tHeader.map((item, index) => {
+									tHeader.map((item: any, index: number) => {
 										return <HMth key={index} style={{width: item.width ? item.width : 'auto'}}>{item.label}</HMth>
 									})
 								}

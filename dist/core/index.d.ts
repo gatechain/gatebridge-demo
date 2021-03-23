@@ -4,6 +4,7 @@ interface ICoreProps {
     assetApplyLink: string;
     pairs: IPairsParam[];
     chainRule: object;
+    locale: string;
 }
 export declare class Core {
     private themeColors;

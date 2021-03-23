@@ -7,6 +7,7 @@ import {X, HelpCircle, ArrowRight} from "react-feather";
 import {ICurrencys, IPairParam} from "../../helpers";
 import {ButtonPrimary} from '../button';
 import Loader from "../loader";
+import {I18nContext} from "../../providers";
 
 const CText = styled.p`
 	font-weight: 400;
@@ -107,6 +108,7 @@ const Separator = styled.div`
 
 export default function CurrencyConfirmModal({isOpen, onDismissConfirmModal,onConfirmDeposit, receiveInfos,pairs,confirmPending}:{isOpen:boolean,confirmPending: boolean,onDismissConfirmModal: () => void,onConfirmDeposit: () => void,receiveInfos: ICurrencys,pairs:IPairParam[]}) {
 	const theme = React.useContext(ThemeContext);
+	const $i18n = React.useContext<any>(I18nContext);
 	const {logo,amount,currency, account, fee} = receiveInfos;
 	const destinationAddress = account.slice(0, 8) + '...' + account.slice(-8);
 	return (
@@ -114,7 +116,7 @@ export default function CurrencyConfirmModal({isOpen, onDismissConfirmModal,onCo
 			<Column style={{ width: '100%', flex: '1 1' }}>
 				<PaddedColumn gap="14px">
 					<RowBetween>
-						<CText>You will receive</CText>
+						<CText>{$i18n['receive1']}</CText>
 						<CloseIcon onClick={onDismissConfirmModal} color={theme.text6}/>
 					</RowBetween>
 				</PaddedColumn>
@@ -126,7 +128,7 @@ export default function CurrencyConfirmModal({isOpen, onDismissConfirmModal,onCo
 					<CurrencyTransaction>
 						 <CTransactionFrom>
 							 <CTransactionText>
-								 From
+								 {$i18n['from']}
 							 </CTransactionText>
 							 <CTransactionBox>
 								 {
@@ -140,7 +142,7 @@ export default function CurrencyConfirmModal({isOpen, onDismissConfirmModal,onCo
 						 </CTransactionIcon>
 						<CTransactionTo>
 							<CTransactionText>
-								To
+								{$i18n['to']}
 							</CTransactionText>
 							<CTransactionBox>
 								{
@@ -152,7 +154,7 @@ export default function CurrencyConfirmModal({isOpen, onDismissConfirmModal,onCo
 					</CurrencyTransaction>
 					<CTransactionAddress>
 						  <CTransactionText>
-							  Destination
+							  {$i18n['destination']}
 							  <br/>
 							  ({ pairs[1]['name']} Network)
 						  </CTransactionText>
@@ -163,7 +165,7 @@ export default function CurrencyConfirmModal({isOpen, onDismissConfirmModal,onCo
 					<Separator />
 					<CTransactionFee>
 						<CTransactionText>
-							Service Fee
+							{$i18n['fee']}
 						</CTransactionText>
 						<CTransactionText>
 							{fee} {pairs[0]['symbol']}
@@ -171,7 +173,7 @@ export default function CurrencyConfirmModal({isOpen, onDismissConfirmModal,onCo
 					</CTransactionFee>
 				</CurrencyInfos>
 				<ButtonPrimary onClick={onConfirmDeposit} disabled={confirmPending}>
-					<span style={{marginRight: '5px'}}>Confirm</span>
+					<span style={{marginRight: '5px'}}>	{$i18n['confirm']}</span>
 					{confirmPending ? <Loader /> : null}
 				</ButtonPrimary>
 			</Column>

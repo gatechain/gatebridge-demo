@@ -5,7 +5,7 @@ import Column, {PaddedColumn} from '../column';
 import {IAssetParam} from "../../helpers";
 import {RowBetween, MenuItem} from '../row';
 import {HelpCircle, X} from 'react-feather';
-import {ConfigContext} from '../../providers';
+import {ConfigContext, I18nContext} from '../../providers';
 
 const CText = styled.p`
 	font-weight: 500;
@@ -98,12 +98,12 @@ const CurrencyList = function (
 	currencies: IAssetParam[], selectedCurrency: string,onCurrencySelect: (address: string) => void
 }) {
 	const {assetApplyLink} = React.useContext<any>(ConfigContext);
+	const $i18n = React.useContext<any>(I18nContext);
 	const renderDom = currencies.map((item, index) => {
 		const address = item.address;
 		const logo = item.logo;
 		const isSelected = Boolean(address === selectedCurrency);
 		const theme = React.useContext(ThemeContext);
-
 		return <MenuItem key={index}  disabled={isSelected}  onClick={() => (!isSelected ? onCurrencySelect(item.address) : null)}>
 			{logo ? <CurrencyLogo src={logo} /> : <HelpCircle size={24} color={theme.text6}/>}
 			<CurrencyName>{item.name}</CurrencyName>
@@ -112,7 +112,11 @@ const CurrencyList = function (
 	})
 	return (
 		<CurrencyListBox>
-			<div>{ currencies.length ? renderDom : <ApplyText>this asset is not supported, <Alink href={assetApplyLink} target="_blank">click here</Alink> to apply</ApplyText>}</div>
+			<div>{ currencies.length ? renderDom : <ApplyText>
+				{$i18n['supported1']}
+				<Alink href={assetApplyLink} target="_blank">{$i18n['click']}</Alink>
+				{$i18n['supported2']}
+			</ApplyText>}</div>
 		</CurrencyListBox>
 	)
 }
@@ -128,19 +132,20 @@ export default function CurrencySearchModal({
 	  handleEnter,
    }: CurrencySearchModalProps) {
 	const theme = React.useContext(ThemeContext);
+	const $i18n = React.useContext<any>(I18nContext);
 	return (
 		<Modal isOpen={isOpen}  onDismiss={onDismiss} maxHeight={90}>
 			<Column style={{ width: '100%', flex: '1 1' }}>
 				<PaddedColumn gap="14px">
 					 <RowBetween>
-						 <CText> Select a token</CText>
+						 <CText>{$i18n['selectToken']}</CText>
 						 <CloseIcon onClick={onDismiss} color={theme.text6}/>
 					 </RowBetween>
 
 					<SearchInput
 						type="text"
 						id="token-search-input"
-						placeholder="Search name or paste address"
+						placeholder={$i18n['search']}
 						onChange={handleInput}
 						onKeyDown={handleEnter}
 					/>

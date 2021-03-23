@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from "styled-components";
 import {IPairParam} from "../../helpers";
+import {I18nContext} from "../../providers";
 
 const CDestinationLayout = styled.div`
   margin-bottom: 40px;
@@ -36,10 +37,11 @@ const CDestinationDesc = styled.div`
 	align-items: center;
 `;
 export default function CurrencyInputDestination({value,onDestinationInput, pairs}: {value: string,onDestinationInput: (address: string) => void,pairs:IPairParam[]}) {
+	const $i18n = React.useContext<any>(I18nContext);
 	return (
 		<CDestinationLayout>
 				<EText>
-					Destination
+					{$i18n['destination']}
 				</EText>
 			  <CDestinationInput
 				    type="text"
@@ -49,7 +51,7 @@ export default function CurrencyInputDestination({value,onDestinationInput, pair
 				    }}
 			  />
 				<CDestinationDesc>
-					This is the destination address of {pairs[1]['name']} network
+					{$i18n['destinationDesc'](pairs[1]['name'])}
 				</CDestinationDesc>
 		</CDestinationLayout>
 	)
