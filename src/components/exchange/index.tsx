@@ -447,6 +447,7 @@ export function ExchangeModal(props: IExchangeModalProps) {
 	}, [searchToken])
 
 	const getSearchTokenInfos = (address: string) => {
+		if(!address)return;
 		Promise.all([handleGetTokenSymbol(address),  handleGetTokenDecimals(address)]).then((result) => {
 			setAssetList([{
 				symbol: result[0],
