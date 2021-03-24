@@ -156,6 +156,9 @@ export function ExchangeModal(props: IExchangeModalProps) {
 	const [isConnect, setIsConnect] = React.useState(false);
 	const [confirmPending, setConfirmPending] = React.useState(false);
 	const [messageState, setMessageState] = React.useState<any>(null);
+	const [searchToken, setSearchToken] =  React.useState('');
+	const [applyStatus, setApplyStatus] =  React.useState(false);
+
 
 	React.useEffect(() => {
 		handleCheckRuleChains(getPairs[0], getPairs[1]);
@@ -429,13 +432,33 @@ export function ExchangeModal(props: IExchangeModalProps) {
 		} else {
 			setAssetList(copyCurrentAssetList);
 		}
+		setSearchToken(input);
+		setApplyStatus(false)
 	}, [])
 
 	const handleSearchEnter = React.useCallback(event => {
-		// if (event.key === 'Enter') {
-		// }
-	}, [])
+		if (event.key === 'Enter') {
+			getSearchTokenInfos(searchToken)
+		}
+	}, [searchToken])
 
+	const handleSearchBtn = React.useCallback(() => {
+		 getSearchTokenInfos(searchToken)
+	}, [searchToken])
+
+	const getSearchTokenInfos = (address: string) => {
+		Promise.all([handleGetTokenSymbol(address),  handleGetTokenDecimals(address)]).then((result) => {
+			setAssetList([{
+				symbol: result[0],
+				name: result[0],
+				logo: '',
+				decimals: result[1],
+				address: address
+			}]);
+		}).catch(error => {
+			setApplyStatus(true)
+		})
+	}
 	const handleTypeAmount = React.useCallback(
 		(value: string) => {
 			const state = Object.assign({}, exchangeFromState);
@@ -527,7 +550,7 @@ export function ExchangeModal(props: IExchangeModalProps) {
 						}
 
 					</RowVerticalEnd>
-					<CurrencyInputAsset onShowCurrentSearch={handleShowCurrentSearch} currencys={exchangeFromState}  />
+					<CurrencyInputAsset onShowCurrentSearch={handleShowCurrentSearch} currencys={exchangeFromState} noMatch={matchChainId} />
 					<CurrencyInputAmount value={exchangeFromState.amount} onUserInput={handleTypeAmount} onMax={handleMaxInput} currencys={exchangeFromState} error={errorAmount}/>
 					<CurrencyInputDestination value={exchangeFromState.account} onDestinationInput={handleTypeToAddress} pairs={getPairs} />
 					<CurrencyInputFee value={exchangeFromState.fee} pairs={getPairs}/>
@@ -564,6 +587,8 @@ export function ExchangeModal(props: IExchangeModalProps) {
 					onCurrencySelect={handleCurrencySelect}
 				  handleInput={handleSearchInput}
 					handleEnter={handleSearchEnter}
+					handleSearch={handleSearchBtn}
+					isApply={applyStatus}
 				/>
 				<CurrencyConfirmModal
 					isOpen={showConfigModal}

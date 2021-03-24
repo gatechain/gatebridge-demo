@@ -1,7 +1,8 @@
 import { ICurrencys } from "../../helpers";
 interface ICurrencyInputAssetProps {
     currencys: ICurrencys;
-    onShowCurrentSearch: () => void;
+    onShowCurrentSearch: any;
+    noMatch: boolean;
 }
 export default function CurrencyInputAsset(props: ICurrencyInputAssetProps): JSX.Element;
 export {};

@@ -1,4 +1,4 @@
-###使用说明
+### 使用说明
 
 1. 直接引用
 ``` base
@@ -15,7 +15,7 @@ import Bridge from "gatebridge-demo";
 const gateBridge = new Bridge({...params})
 ```
 
-###params
+### params
 
 ```js
 {

@@ -15,13 +15,13 @@ const EText = styled.div`
 	margin-bottom: 4px;
 `;
 
-const InputRow = styled.div<{ selected: boolean }>`
+const InputRow = styled.div<{ selected: boolean, disabled: boolean }>`
    height: 40px;
    padding: 10px 16px;
 	 border-radius: 5px;
 	 box-shadow: 1px 1px 6px 0px ${({ theme }) => theme.shadow1};
 	 border: 1px solid ${({ theme }) => theme.border2};
-	 background: ${({ theme }) => theme.bg1};
+	 background: ${({ disabled, theme }) => disabled ? darken(0.05, theme.primary1) : theme.bg1};
 	 box-sizing: border-box;
 	 cursor: pointer;
 	 display: flex;
@@ -50,10 +50,17 @@ const CurrencyLabel = styled.span`
 	margin-left: 8px;
 
 `;
+const CurrencyAddress = styled.span`
+  font-size: 13px;
+  font-weight: 300;
+	color: ${({ theme }) => theme.text7};
+	margin-left: 20px;
+`;
 const ChevronDownIcon = styled.div`
 		display: flex;
 		align-items: center;
 `;
+
 const Placeholder = styled.div`
     font-size: 13px;
     font-weight: 300;
@@ -62,26 +69,28 @@ const Placeholder = styled.div`
 
 interface ICurrencyInputAssetProps {
 	currencys: ICurrencys,
-	onShowCurrentSearch: () => void;
+	onShowCurrentSearch: any,
+	noMatch: boolean
 }
 
 export default function CurrencyInputAsset (props: ICurrencyInputAssetProps){
-	const {onShowCurrentSearch, currencys: {logo, currency}} = props;
+	const {onShowCurrentSearch, currencys: {logo, currency, tokenAddress}, noMatch} = props;
 	const theme = React.useContext(ThemeContext);
 	const $i18n = React.useContext<any>(I18nContext);
 	return <CAssetLayout>
 			    <EText>{$i18n['asset']}</EText>
 				  <InputRow
+					  disabled={noMatch}
 					  selected={false}
 					  className="open-currency-select-button"
 					  onClick={() => {
-						  onShowCurrentSearch();
+					  	!noMatch && onShowCurrentSearch();
 				  }}>
 					  <CurrencyBox >
 						  {
 							  currency ?
 								   <>{logo ? <CurrencyLogo src={logo} /> : <HelpCircle size={20} color={theme.text6}/>}
-								  <CurrencyLabel> {currency}</CurrencyLabel></> : <Placeholder>{$i18n['selectToken']}</Placeholder>
+								  <CurrencyLabel> {currency}</CurrencyLabel> <CurrencyAddress>({tokenAddress.slice(0,8) + '...' + tokenAddress.slice(-8)})</CurrencyAddress> </> : <Placeholder>{$i18n['selectToken']}</Placeholder>
 						  }
 
 					  </CurrencyBox>

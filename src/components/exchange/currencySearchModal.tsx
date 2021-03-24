@@ -4,7 +4,7 @@ import Modal from '../modal';
 import Column, {PaddedColumn} from '../column';
 import {IAssetParam} from "../../helpers";
 import {RowBetween, MenuItem} from '../row';
-import {HelpCircle, X} from 'react-feather';
+import {HelpCircle, X, Search} from 'react-feather';
 import {ConfigContext, I18nContext} from '../../providers';
 
 const CText = styled.p`
@@ -16,11 +16,14 @@ const CText = styled.p`
 export const CloseIcon = styled(X)<{ onClick: () => void }>`
   cursor: pointer;
 `
-
-export const SearchInput = styled.input`
+const SearchBox = styled.div`
+	 position:relative;
+`;
+const SearchInput = styled.input`
   position: relative;
+  width: 100%;
+  box-sizing: border-box;
   display: flex;
-  padding: 16px;
   align-items: center;
   white-space: nowrap;
   background: none;
@@ -33,6 +36,7 @@ export const SearchInput = styled.input`
   -webkit-appearance: none;
   font-size: 16px;
   transition: border 100ms;
+   padding: 16px 35px 16px 16px ;
   ::placeholder {
     font-weight: 300!important;
     font-size: 16px!important;
@@ -43,7 +47,12 @@ export const SearchInput = styled.input`
     outline: none;
   }
 `
-
+const SearchIcon = styled.div`
+ position: absolute;
+ right: 14px;
+ top: 15px;
+ cursor: pointer;
+`;
 const Separator = styled.div`
   width: 100%;
   height: 1px;
@@ -81,12 +90,14 @@ const Alink = styled.a`
 `
 interface CurrencySearchModalProps {
 	isOpen: boolean;
+	isApply: boolean,
 	onDismiss: () => void;
 	assetList: IAssetParam[];
 	selectedCurrency: string;
 	onCurrencySelect: (currency: string) => void,
 	handleEnter: (event: any) => void,
 	handleInput: (event: any) => void,
+	handleSearch: () => void
 }
 
 const CurrencyList = function (
@@ -94,8 +105,9 @@ const CurrencyList = function (
 	  currencies,
 		selectedCurrency,
 		onCurrencySelect,
+		isApply
 	} : {
-	currencies: IAssetParam[], selectedCurrency: string,onCurrencySelect: (address: string) => void
+	currencies: IAssetParam[], selectedCurrency: string,onCurrencySelect: (address: string) => void, isApply: boolean
 }) {
 	const {assetApplyLink} = React.useContext<any>(ConfigContext);
 	const $i18n = React.useContext<any>(I18nContext);
@@ -112,11 +124,15 @@ const CurrencyList = function (
 	})
 	return (
 		<CurrencyListBox>
-			<div>{ currencies.length ? renderDom : <ApplyText>
-				{$i18n['supported1']}
-				<Alink href={assetApplyLink} target="_blank">{$i18n['click']}</Alink>
-				{$i18n['supported2']}
-			</ApplyText>}</div>
+				{ currencies.length ? renderDom : null}
+			  {
+				  isApply ? <ApplyText>
+					  {$i18n['supported1']}
+					  <Alink href={assetApplyLink} target="_blank">{$i18n['click']}</Alink>
+					  {$i18n['supported2']}
+				  </ApplyText> : null
+			  }
+
 		</CurrencyListBox>
 	)
 }
@@ -124,12 +140,14 @@ const CurrencyList = function (
 
 export default function CurrencySearchModal({
     isOpen,
+	  isApply,
     onDismiss,
 	  assetList,
 	  selectedCurrency,
     onCurrencySelect,
 	  handleInput,
 	  handleEnter,
+	  handleSearch
    }: CurrencySearchModalProps) {
 	const theme = React.useContext(ThemeContext);
 	const $i18n = React.useContext<any>(I18nContext);
@@ -141,19 +159,24 @@ export default function CurrencySearchModal({
 						 <CText>{$i18n['selectToken']}</CText>
 						 <CloseIcon onClick={onDismiss} color={theme.text6}/>
 					 </RowBetween>
+					<SearchBox>
+						<SearchInput
+							type="text"
+							id="token-search-input"
+							placeholder={$i18n['search']}
+							onChange={handleInput}
+							onKeyDown={handleEnter}
+						/>
+						<SearchIcon onClick={handleSearch}>
+							<Search color={theme.text6} size={19} />
+						</SearchIcon>
+					</SearchBox>
 
-					<SearchInput
-						type="text"
-						id="token-search-input"
-						placeholder={$i18n['search']}
-						onChange={handleInput}
-						onKeyDown={handleEnter}
-					/>
 				</PaddedColumn>
 				<Separator />
 
 				<div style={{ flex: '1 1 auto' }}>
-					<CurrencyList currencies={assetList} selectedCurrency={selectedCurrency} onCurrencySelect={onCurrencySelect}/>
+					<CurrencyList currencies={assetList} selectedCurrency={selectedCurrency} onCurrencySelect={onCurrencySelect} isApply={isApply} />
 				</div>
 			</Column>
 		</Modal>
