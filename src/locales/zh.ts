@@ -17,7 +17,7 @@ export  default  {
    },
    'approve': '授权',
    'next': '下一步',
-   'connect': '链接钱包',
+   'connect': '连接钱包',
    'bridgeDesc': '跨链BTC、BCH等资产至GateChain网络，请前往',
    'address':'地址',
    'selectToken': '选择 token',
