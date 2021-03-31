@@ -425,9 +425,10 @@ export function ExchangeModal(props: IExchangeModalProps) {
 	const handleSearchInput = React.useCallback(event => {
 		const input = event.target.value;
 		if(input.trim()){
-			const checksummedInput = isAddress(input);
-			const filterList = copyCurrentAssetList.filter((item: { address: any; symbol: any; }) => {
-				return (checksummedInput && item.address == input) || item.symbol.indexOf(input.toUpperCase()) > -1 ;
+			const filterList = copyCurrentAssetList.filter((item ) => {
+				const address = item.address.toLocaleLowerCase();
+				const symbol = item.symbol.toUpperCase();
+				return address.indexOf(input.toLocaleLowerCase()) > -1 ||  symbol.indexOf(input.toUpperCase()) > -1;
 			})
 			setAssetList(filterList);
 		} else {
@@ -449,17 +450,22 @@ export function ExchangeModal(props: IExchangeModalProps) {
 
 	const getSearchTokenInfos = (address: string) => {
 		if(!address)return;
-		Promise.all([handleGetTokenSymbol(address),  handleGetTokenDecimals(address)]).then((result) => {
-			setAssetList([{
-				symbol: result[0],
-				name: result[0],
-				logo: '',
-				decimals: result[1],
-				address: address
-			}]);
-		}).catch(error => {
+		const checksummedInput = isAddress(address);
+		if(checksummedInput){
+			Promise.all([handleGetTokenSymbol(address),  handleGetTokenDecimals(address)]).then((result) => {
+				setAssetList([{
+					symbol: result[0],
+					name: result[0],
+					logo: '',
+					decimals: result[1],
+					address: address
+				}]);
+			}).catch(error => {
+				setApplyStatus(true)
+			})
+		} else {
 			setApplyStatus(true)
-		})
+		}
 	}
 	const handleTypeAmount = React.useCallback(
 		(value: string) => {
