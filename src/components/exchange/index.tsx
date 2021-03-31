@@ -397,6 +397,7 @@ export function ExchangeModal(props: IExchangeModalProps) {
 			setAssetList(copyCurrentAssetList);
 		}
 		setShowSearch(true)
+		setApplyStatus(false)
 	}, [exchangeState]);
 
 	const handleSearchDismiss = React.useCallback(() => {
