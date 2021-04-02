@@ -20,7 +20,7 @@ interface ICoreProps {
 
 const initCoreState = {
 	// themeName: 'default',
-	themeName: 'dark',
+	// themeName: 'dark',
 	pairs: [],
 	chainRule: {},
 	gateLink: '',
