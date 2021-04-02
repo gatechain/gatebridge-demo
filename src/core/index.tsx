@@ -13,17 +13,21 @@ interface ICoreProps {
 	// customTheme?: IThemesConfig[],
 	pairs: IPairsParam[],
 	chainRule: object,
-	locale: string
+	locale: string,
+	chainPool: IPairsParam[]
+	supportedChainIds: number[]
 }
 
 const initCoreState = {
 	// themeName: 'default',
-	// themeName: 'dark',
+	themeName: 'dark',
 	pairs: [],
 	chainRule: {},
 	gateLink: '',
 	assetApplyLink: '',
 	locale: 'zh',
+	supportedChainIds: [1, 3, 4, 5, 42, 66],
+	chainPool: []
 };
 
 function getLibrary(provider: any): Web3Provider {
@@ -36,7 +40,7 @@ export class Core {
 	private themeColors: ThemeColors;
 	constructor(opts: ICoreProps) {
 		if(opts){
-			const {pairs, chainRule, gateLink, assetApplyLink, locale} = opts;
+			const {pairs, chainRule, gateLink, assetApplyLink, locale, chainPool, supportedChainIds} = opts;
 			// if(customTheme){
 			// 	this.mergeDefaultThemeColors(customTheme);
 			// 	initCoreState['themeName'] = theme.name;
@@ -59,6 +63,14 @@ export class Core {
 
 			if(locale){
 				(initCoreState as any )['locale'] = locale;
+			}
+
+			if(chainPool){
+				(initCoreState as any )['chainPool'] = chainPool;
+			}
+
+			if(supportedChainIds){
+				(initCoreState as any )['supportedChainIds'] = supportedChainIds;
 			}
 		}
 

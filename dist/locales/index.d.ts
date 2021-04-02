@@ -25,6 +25,8 @@ declare const _default: {
         confirm: string;
         notExchanged: string;
         notMatch: string;
+        noOrders: string;
+        network: string;
     };
     zh: {
         from: string;
@@ -52,6 +54,8 @@ declare const _default: {
         confirm: string;
         notExchanged: string;
         notMatch: string;
+        noOrders: string;
+        network: string;
     };
 };
 export default _default;

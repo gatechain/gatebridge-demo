@@ -27,5 +27,7 @@ export  default  {
 	'click': 'click here',
 	'confirm': 'Confirm',
 	'notExchanged': 'two chains that cannot be exchanged',
-	'notMatch': 'the trading network does not match the network you are currently connected to'
+	'notMatch': 'the trading network does not match the network you are currently connected to',
+	'noOrders': 'No orders!',
+	'network': 'Network'
 }

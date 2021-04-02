@@ -5,6 +5,8 @@ interface ICoreProps {
     pairs: IPairsParam[];
     chainRule: object;
     locale: string;
+    chainPool: IPairsParam[];
+    supportedChainIds: number[];
 }
 export declare class Core {
     private themeColors;

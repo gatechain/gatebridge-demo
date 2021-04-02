@@ -13,19 +13,26 @@
 		assetApplyLink: 'https://www.gateio.pro',
 		gateLink: 'https://www.gateio.pro',
 		chainRule: { // 跨链白名单
-			'5->1337': {
+			'1->66': {
 				tips: '',
 				destChainId: 78
 			},
-			'1337->5': {
+			'66->1': {
 				tips:'Gate.io has supported asset exchange between different chains with lower service fees. Deposit your asset and withdraw what you want.',
 				destChainId: 5
+			},
+			'3->66': {
+				tips: '',
+			},
+			'66->3': {
+				tips: '',
 			}
 		},
-		pairs: [
+		supportedChainIds: [1, 3, 4, 5, 42, 1337, 66],
+		chainPool: [
 			{
 				name: 'Ethereum',
-				chainId: 5,
+				chainId: 1,
 				symbol: 'ETH',
 				logo:  '',
 				bridgeAddress: '0x219e350a5b58612BF968aa1F5aFF1e52856d687a',
@@ -43,7 +50,99 @@
 			},
 			{
 				name: 'GateChain',
-				chainId: 1337,
+				chainId: 66,
+				symbol: 'GT',
+				logo:  '',
+				decimals: 18,
+				bridgeAddress: '0x830C57Bc09f137eF2cFC7c3797aA62FDA071c94A',
+				handler: '0x417306de14Bf393DF5d747ee555F8D4d2C3c3D83',
+				assetList: [
+					{
+						symbol: "WENUS",
+						name: "wenus",
+						logo: '',
+						decimals: "18",
+						address: '0x2d2490D29DBBCC0751033A76fE7906D63140Ce2d'
+					},
+				]
+			},
+			{
+				name: 'Ropsten',
+				chainId: 3,
+				symbol: 'ETH',
+				logo:  '',
+				decimals: 18,
+				bridgeAddress: '0x830C57Bc09f137eF2cFC7c3797aA62FDA071c94A',
+				handler: '0x417306de14Bf393DF5d747ee555F8D4d2C3c3D83',
+				assetList: [
+					{
+						symbol: "WENUS",
+						name: "wenus",
+						logo: '',
+						decimals: "18",
+						address: '0x2d2490D29DBBCC0751033A76fE7906D63140Ce2d'
+					},
+				]
+			},
+			{
+				name: 'Kovan',
+				chainId: 42,
+				symbol: 'ETH',
+				logo:  '',
+				decimals: 18,
+				bridgeAddress: '0x830C57Bc09f137eF2cFC7c3797aA62FDA071c94A',
+				handler: '0x417306de14Bf393DF5d747ee555F8D4d2C3c3D83',
+				assetList: [
+					{
+						symbol: "WENUS",
+						name: "wenus",
+						logo: '',
+						decimals: "18",
+						address: '0x2d2490D29DBBCC0751033A76fE7906D63140Ce2d'
+					},
+				]
+			},
+			{
+				name: 'Rinkeby',
+				chainId: 4,
+				symbol: 'ETH',
+				logo:  '',
+				decimals: 18,
+				bridgeAddress: '0x830C57Bc09f137eF2cFC7c3797aA62FDA071c94A',
+				handler: '0x417306de14Bf393DF5d747ee555F8D4d2C3c3D83',
+				assetList: [
+					{
+						symbol: "WENUS",
+						name: "wenus",
+						logo: '',
+						decimals: "18",
+						address: '0x2d2490D29DBBCC0751033A76fE7906D63140Ce2d'
+					},
+				]
+			},
+		],
+		pairs: [
+			{
+				name: 'Ethereum',
+				chainId: 1,
+				symbol: 'ETH',
+				logo:  '',
+				bridgeAddress: '0x219e350a5b58612BF968aa1F5aFF1e52856d687a',
+				handler: '0x8922A6e52c35982cA598c4d1a725eE3775127ABa',
+				decimals: 18,
+				assetList: [
+					{
+						symbol: "WENUS",
+						name: "wenus",
+						logo: '',
+						decimals: "18",
+						address: '0xaFF4481D10270F50f203E0763e2597776068CBc5'
+					},
+				]
+			},
+			{
+				name: 'GateChain',
+				chainId: 66,
 				symbol: 'GT',
 				logo:  '',
 				decimals: 18,

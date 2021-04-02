@@ -4,6 +4,8 @@ import { ChainId } from '@uniswap/sdk';
 import { injected } from '../connectors'
 import { useWeb3React as useWeb3ReactCore } from '@web3-react/core';
 import { Web3ReactContextInterface } from '@web3-react/core/dist/types';
+import * as React from "react";
+import {ConfigContext} from "../providers";
 // import { NetworkContextName } from '../constants'
 
 
@@ -15,13 +17,14 @@ export function useActiveWeb3React(): Web3ReactContextInterface<Web3Provider> & 
 
 export function useEagerConnect() {
 	const { activate, active } = useWeb3ReactCore()
+	const {supportedChainIds} = React.useContext<any>(ConfigContext);
 
 	const [tried, setTried] = useState(false)
 
 	useEffect(() => {
-		injected.isAuthorized().then((isAuthorized: boolean) => {
+		injected(supportedChainIds).isAuthorized().then((isAuthorized: boolean) => {
 			if (isAuthorized) {
-				activate(injected, undefined, true).catch(() => {
+				activate(injected(supportedChainIds), undefined, true).catch(() => {
 					setTried(true)
 				})
 			} else {
@@ -42,27 +45,28 @@ export function useEagerConnect() {
 
 export function useInactiveListener(suppress: boolean = false) {
 	const { active, error, activate } = useWeb3ReactCore();
+	const {supportedChainIds} = React.useContext<any>(ConfigContext);
 
 	useEffect((): any => {
 		const { ethereum } = window as any
 		if (ethereum && ethereum.on && !active && !error && !suppress) {
 			const handleConnect = () => {
 				console.log("Handling 'connect' event")
-				activate(injected)
+				activate(injected(supportedChainIds))
 			}
 			const handleChainChanged = (chainId: string | number) => {
 				console.log("Handling 'chainChanged' event with payload", chainId)
-				activate(injected)
+				activate(injected(supportedChainIds))
 			}
 			const handleAccountsChanged = (accounts: string[]) => {
 				console.log("Handling 'accountsChanged' event with payload", accounts)
 				if (accounts.length > 0) {
-					activate(injected)
+					activate(injected(supportedChainIds))
 				}
 			}
 			const handleNetworkChanged = (networkId: string | number) => {
 				console.log("Handling 'networkChanged' event with payload", networkId)
-				activate(injected)
+				activate(injected(supportedChainIds))
 			}
 
 			ethereum.on('connect', handleConnect)

@@ -1,1 +1,1 @@
-{"version":3,"file":"currentCoin.d.ts","sourceRoot":"","sources":["../../src/components/currentCoin.tsx"],"names":[],"mappings":"AAEA,OAAO,EAAE,UAAU,EAAE,MAAM,YAAY,CAAC;AA8BxC,QAAA,MAAM,WAAW,UAAmB,UAAU,gBAa7C,CAAA;AAED,eAAe,WAAW,CAAC"}
+{"version":3,"file":"currentCoin.d.ts","sourceRoot":"","sources":["../../src/components/currentCoin.tsx"],"names":[],"mappings":"AAEA,OAAO,EAAE,UAAU,EAAE,MAAM,YAAY,CAAC;AAwFxC,QAAA,MAAM,WAAW;aAAoE,UAAU;WAAO,UAAU;kBAAe,OAAO;6BAAyB,UAAU,iBAAiB,MAAM,GAAG,SAAS,KAAK,IAAI;iBA4DpN,CAAA;AAED,eAAe,WAAW,CAAC"}

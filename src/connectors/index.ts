@@ -15,6 +15,8 @@ export const network = new NetworkConnector({
 	defaultChainId: 1
 })
 
-export const injected = new InjectedConnector({
-	supportedChainIds: [1, 3, 4, 5, 42, 1337, 66]
-})
+export const injected = function (chainIds: number[]){
+	return new InjectedConnector({
+		supportedChainIds: chainIds
+	})
+}

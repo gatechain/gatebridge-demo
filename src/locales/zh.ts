@@ -27,5 +27,7 @@ export  default  {
    'click': '跳转',
    'confirm': '确定',
    'notExchanged': '当前网络无法兑换',
-   'notMatch': '交易网络与您当前连接网络不一致'
+   'notMatch': '交易网络与您当前连接网络不一致',
+   'noOrders': '暂无数据！',
+   'network': '网络'
 }

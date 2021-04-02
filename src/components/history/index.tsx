@@ -6,7 +6,6 @@ import {ArrowRightCircle, HelpCircle} from 'react-feather';
 import {I18nContext} from "../../providers";
 
 const HLayout = styled.div`
- font-family: PingFangSC, PingFangSC-Medium, sans-serif;
  display: flex;
  flex-direction: column;
  width: 100%;
@@ -92,6 +91,7 @@ const HMAddress = styled.div`
 
 const EmptyBox = styled.div`
   border: 1px solid ${({ theme }) => theme.border3};
+  font-weight: 350;
   border-top: none;
   padding: 20px;
   text-align: center;
@@ -225,7 +225,7 @@ export function HistoryModal(props: IHistoryModalProps) {
 						</HMtbody>
 					</HMTable>
 					{
-						!orders.length ? <EmptyBox>No orders!</EmptyBox> : null
+						!orders.length ? <EmptyBox>{$i18n['noOrders']}</EmptyBox> : null
 					}
 				</HistoryMain>
 			</HLayout>

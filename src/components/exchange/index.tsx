@@ -7,7 +7,7 @@ import {BigNumber} from "bignumber.js";
 import {ThemeColors, IPairParam, ICurrencys, getLocal, setLocal, isAddress, IAssetParam} from "../../helpers";
 import {RowVerticalEnd} from '../row';
 import { darken } from 'polished'
-import { ArrowRight } from 'react-feather';
+import {ArrowRight} from 'react-feather';
 import {useActiveWeb3React, useEagerConnect, useInactiveListener} from '../../hooks';
 import CurrentCoin from '../currentCoin';
 import Message from '../message';
@@ -140,9 +140,9 @@ let bridge: { getBalance: (arg0: string | null | undefined, arg1: any) => Promis
 let copyCurrentAssetList:IAssetParam[] = [];
 export function ExchangeModal(props: IExchangeModalProps) {
 	const {themeColors, pairs} = props;
-	const {chainRule: getChainRule, gateLink: gateLinkUrl} = React.useContext<any>(ConfigContext);
+	const {chainRule: getChainRule, gateLink: gateLinkUrl, supportedChainIds} = React.useContext<any>(ConfigContext);
 	const $i18n = React.useContext<any>(I18nContext);
-	const { activate: activateNetwork, chainId, library } = useWeb3React();
+	const {activate: activateNetwork, chainId, library } = useWeb3React();
 	const [exchangeFromState, setExchangeFromState] = React.useState(exchangeState);
 	const [getPairs, setPairs] =  React.useState(pairs);
 	const [assetList, setAssetList] = React.useState<any>([]);
@@ -356,7 +356,7 @@ export function ExchangeModal(props: IExchangeModalProps) {
 		}
 
 		getAssetList(getPairs[0]['assetList']);
-	}, [chainId, getPairs[0]['chainId']])
+	}, [chainId, getPairs])
 
 	const handleCheckRuleChains = React.useCallback((onePair, twoPair) => {
 		const ruleKey = onePair['chainId'] + '->' + twoPair['chainId'];
@@ -385,7 +385,21 @@ export function ExchangeModal(props: IExchangeModalProps) {
 		setPairs([getPairs[1], getPairs[0]])
 		getAssetList(getPairs[1]['assetList']);
 		handleCheckRuleChains(getPairs[1], getPairs[0]);
-	}, [getPairs]);
+	}, [getPairs, setPairs]);
+
+	const handleChangeNetWork =  React.useCallback((netWork, currChainId) => {
+		const {chainId: fromChainId} = getPairs[0];
+		const {chainId: toChainId} = getPairs[1];
+		let pais: any = [];
+		if(currChainId === fromChainId){
+			pais = [netWork, getPairs[1]]
+		}else if(currChainId === toChainId){
+			pais = [getPairs[0], netWork]
+		}
+		setPairs(pais);
+		getAssetList(pais[0]['assetList']);
+		handleCheckRuleChains(pais[0], pais[1]);
+	},[getPairs, setPairs, setErrRuleChainId]);
 
 	const handleShowCurrentSearch = React.useCallback(() => {
 		if(!exchangeState.account){
@@ -493,7 +507,7 @@ export function ExchangeModal(props: IExchangeModalProps) {
 
 	const handleConnectWallet =  React.useCallback(() => {
 		setIsConnect(true);
-		activateNetwork(injected, undefined, true).catch((error) => {
+		activateNetwork(injected(supportedChainIds), undefined, true).catch((error) => {
 			if(error.code == -32002){
 				setMessageState({
 					error: true,
@@ -535,7 +549,7 @@ export function ExchangeModal(props: IExchangeModalProps) {
 					<RowVerticalEnd>
 						<div>
 							<Etext>{$i18n['from']}</Etext>
-							<CurrentCoin {...getPairs[0]} errorChainId={matchChainId}/>
+							<CurrentCoin current={getPairs[0]} errorChainId={matchChainId} other={getPairs[1]} changeNetWork={handleChangeNetWork}/>
 						</div>
 						<EchangeBtnBox>
 							<EchangeButton onClick={handleExchangePair} >
@@ -544,7 +558,7 @@ export function ExchangeModal(props: IExchangeModalProps) {
 						</EchangeBtnBox>
 						<div>
 							<Etext>{$i18n['to']}</Etext>
-							<CurrentCoin {...getPairs[1]} errorChainId={errRuleChainId}/>
+							<CurrentCoin current={getPairs[1]} errorChainId={errRuleChainId} other={getPairs[0]} changeNetWork={handleChangeNetWork}/>
 						</div>
 
 						{
