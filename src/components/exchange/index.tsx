@@ -419,15 +419,15 @@ export function ExchangeModal(props: IExchangeModalProps) {
 	}, []);
 
 	const handleCurrencySelect = React.useCallback(
-		 (address: string) => {
+		 (currency: IAssetParam) => {
 			const state = Object.assign({}, exchangeFromState);
-			Promise.all([handleGetTokenSymbol(address),  handleGetTokenDecimals(address), handleGetTokenResourceId(getPairs[0]['handler'], address)]).then((result) => {
+			Promise.all([handleGetTokenSymbol(currency.address),  handleGetTokenDecimals(currency.address), handleGetTokenResourceId(getPairs[0]['handler'], currency.address)]).then((result) => {
 				exchangeState.currency =  state.currency = result[0];
 				exchangeState.decimals =  state.decimals = result[1];
 				exchangeState.resourceId =  state.resourceId = result[2];
-
 				exchangeState.amount = state.amount = '';
-				exchangeState.tokenAddress = state.tokenAddress = address;
+				exchangeState.tokenAddress = state.tokenAddress = currency.address;
+				exchangeState.logo = state.logo = currency.logo;
 				exchangeState.tokenAddress && handleGetBalance(exchangeState.account, exchangeState.tokenAddress);
 				setExchangeFromState(state);
 				handleSearchDismiss();
@@ -573,7 +573,7 @@ export function ExchangeModal(props: IExchangeModalProps) {
 
 					</RowVerticalEnd>
 					<CurrencyInputAsset onShowCurrentSearch={handleShowCurrentSearch} currencys={exchangeFromState} noMatch={matchChainId} />
-					<CurrencyInputAmount value={exchangeFromState.amount} onUserInput={handleTypeAmount} onMax={handleMaxInput} currencys={exchangeFromState} error={errorAmount}/>
+					<CurrencyInputAmount value={exchangeFromState.amount} onUserInput={handleTypeAmount} onMax={handleMaxInput} currencys={exchangeFromState} error={errorAmount} pairs={getPairs}/>
 					<CurrencyInputDestination value={exchangeFromState.account} onDestinationInput={handleTypeToAddress} pairs={getPairs} />
 					<CurrencyInputFee value={exchangeFromState.fee} pairs={getPairs}/>
 					{

@@ -2,7 +2,7 @@ import React from 'react';
 import styled, {ThemeContext} from "styled-components";
 import {RowBetween} from '../row';
 import { darken } from 'polished'
-import {escapeRegExp, ICurrencys} from '../../helpers';
+import {escapeRegExp, ICurrencys, IPairParam, toThousands} from '../../helpers';
 import {HelpCircle} from "react-feather";
 import {I18nContext} from "../../providers";
 
@@ -91,17 +91,18 @@ const CurrencyLogo = styled.img`
 const inputRegex = RegExp(`^\\d*(?:\\\\[.])?\\d*$`);
 
 
-export default function CurrencyInputAmount({value, onUserInput,onMax,currencys, ...rest} : {
+export default function CurrencyInputAmount({value, onUserInput,onMax,currencys,pairs, ...rest} : {
 	value: string | number,
 	onUserInput: (input: string) => void,
 	currencys: ICurrencys,
 	onMax?: () => void,
+	pairs: IPairParam[],
 	error?: boolean
 }) {
 	const theme = React.useContext(ThemeContext);
 	const $i18n = React.useContext<any>(I18nContext);
 
-	const {logo, currency, balance} = currencys
+	const {currency, balance} = currencys;
 	const enforcer = (nextUserInput: string) => {
 		if (nextUserInput === '' || inputRegex.test(escapeRegExp(nextUserInput))) {
 			onUserInput(nextUserInput)
@@ -114,7 +115,7 @@ export default function CurrencyInputAmount({value, onUserInput,onMax,currencys,
 					{$i18n['amount']}
 				</EText>
 				<CAvaliavle>
-					{$i18n['available']}: {Number(balance).toLocaleString()} {currency}
+					{$i18n['available']}: {toThousands(Number(balance))} {currency}
 				</CAvaliavle>
 			</RowBetween>
 			<CAmountBox>
@@ -142,9 +143,9 @@ export default function CurrencyInputAmount({value, onUserInput,onMax,currencys,
 			<CReceiveBox>
 				{$i18n['receive1'] } ≈
 				<CurrencyLogoBox>
-					{logo ? <CurrencyLogo src={logo} /> : <HelpCircle size={14} color={theme.text6}/>}
+					{pairs[1]['logo'] ? <CurrencyLogo src={pairs[1]['logo']} /> : <HelpCircle size={14} color={theme.text6}/>}
 				</CurrencyLogoBox>
-				{Number(value).toLocaleString() || 0} {currency}
+				{toThousands(Number(value)) || 0} {currency}
 			</CReceiveBox>
 		</CAmountLayout>
 	)

@@ -9,7 +9,7 @@ interface CurrencySearchModalProps {
     onDismiss: () => void;
     assetList: IAssetParam[];
     selectedCurrency: string;
-    onCurrencySelect: (currency: string) => void;
+    onCurrencySelect: (currency: IAssetParam) => void;
     handleEnter: (event: any) => void;
     handleInput: (event: any) => void;
     handleSearch: () => void;

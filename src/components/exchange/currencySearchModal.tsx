@@ -94,7 +94,7 @@ interface CurrencySearchModalProps {
 	onDismiss: () => void;
 	assetList: IAssetParam[];
 	selectedCurrency: string;
-	onCurrencySelect: (currency: string) => void,
+	onCurrencySelect: (currency: IAssetParam) => void,
 	handleEnter: (event: any) => void,
 	handleInput: (event: any) => void,
 	handleSearch: () => void
@@ -107,7 +107,7 @@ const CurrencyList = function (
 		onCurrencySelect,
 		isApply
 	} : {
-	currencies: IAssetParam[], selectedCurrency: string,onCurrencySelect: (address: string) => void, isApply: boolean
+	currencies: IAssetParam[], selectedCurrency: string,onCurrencySelect: (currency: IAssetParam) => void, isApply: boolean
 }) {
 	const {assetApplyLink} = React.useContext<any>(ConfigContext);
 	const $i18n = React.useContext<any>(I18nContext);
@@ -116,7 +116,7 @@ const CurrencyList = function (
 		const logo = item.logo;
 		const isSelected = Boolean(address === selectedCurrency);
 		const theme = React.useContext(ThemeContext);
-		return <MenuItem key={index}  disabled={isSelected}  onClick={() => (!isSelected ? onCurrencySelect(item.address) : null)}>
+		return <MenuItem key={index}  disabled={isSelected}  onClick={() => (!isSelected ? onCurrencySelect(item) : null)}>
 			{logo ? <CurrencyLogo src={logo} /> : <HelpCircle size={24} color={theme.text6}/>}
 			<CurrencyName>{item.name}</CurrencyName>
 			<CurrencyAddress>{item.address.slice(0, 8) + '...' + item.address.slice(-8)}</CurrencyAddress>

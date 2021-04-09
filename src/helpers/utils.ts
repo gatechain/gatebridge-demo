@@ -51,3 +51,14 @@ export function isAddress(value: any): string | false {
 	}
 }
 
+export function toThousands(num: any) {
+	var initNum = (num || 0).toString(), result = '', formatNum = '';
+	if (initNum.indexOf('.') > -1) formatNum = (num || 0).toString().split('.')
+	var num = formatNum ? formatNum[0] : initNum;
+	while (num.length > 3) {
+		result = ',' + num.slice(-3) + result;
+		num = num.slice(0, num.length - 3);
+	}
+	if (num) { result = formatNum ? num + result + '.' + formatNum[1] : num + result; }
+	return result;
+}
