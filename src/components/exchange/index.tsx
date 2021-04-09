@@ -33,7 +33,7 @@ const ELayout = styled.div`
     -webkit-box-align: center;
     align-items: center;
     flex: 1 1 0%;
-    overflow: hidden auto;
+    overflow: hidden;
     user-select: none;
 `;
 
@@ -148,7 +148,7 @@ export function ExchangeModal(props: IExchangeModalProps) {
 	const [assetList, setAssetList] = React.useState<any>([]);
 	const [isApprove, setIsApprove] = React.useState(false);
 	const [approvePending, setApprovePending] = React.useState(false);
-	const [errorAmount, setArrorAmount] = React.useState(false);
+	const [errorAmount, setErrorAmount] = React.useState(false);
 	const [matchChainId, setMatchChainId] = React.useState(false);
 	const [errRuleChainId, setErrRuleChainId] = React.useState(false);
 	const [showSearch, setShowSearch] = React.useState(false);
@@ -158,6 +158,8 @@ export function ExchangeModal(props: IExchangeModalProps) {
 	const [messageState, setMessageState] = React.useState<any>(null);
 	const [searchToken, setSearchToken] =  React.useState('');
 	const [applyStatus, setApplyStatus] =  React.useState(false);
+	const [errorAddress, setErrorAddress] =  React.useState(false);
+	const [allowanceLoading, setAllowanceLoading] =  React.useState(false);
 
 
 	React.useEffect(() => {
@@ -205,9 +207,11 @@ export function ExchangeModal(props: IExchangeModalProps) {
 
 	const handleGetAllowance = React.useCallback(async (token: string, handler:string, decimals: number) => {
 		if(bridge){
+			setAllowanceLoading(true);
 			let amountVal =  new BigNumber(Number(exchangeState.amount)).multipliedBy(decimals).toString(10);
 			const result =  await (bridge as any).getAllowance(token, handler);
 			setIsApprove(Number(result.toString()) - Number(amountVal) < 0);
+			setAllowanceLoading(false);
 		}
 	},[])
 
@@ -346,7 +350,7 @@ export function ExchangeModal(props: IExchangeModalProps) {
 
 		initState();
 
-		setArrorAmount(false);
+		setErrorAmount(false);
 
 		if(chainId && getPairs[0].chainId != chainId){
 			setMatchChainId(true)
@@ -431,7 +435,7 @@ export function ExchangeModal(props: IExchangeModalProps) {
 				exchangeState.tokenAddress && handleGetBalance(exchangeState.account, exchangeState.tokenAddress);
 				setExchangeFromState(state);
 				handleSearchDismiss();
-				setArrorAmount(false);
+				setErrorAmount(false);
 			})
 		},[handleSearchDismiss, exchangeFromState, getPairs]
 	)
@@ -486,7 +490,7 @@ export function ExchangeModal(props: IExchangeModalProps) {
 			const state = Object.assign({}, exchangeFromState);
 			exchangeState.amount = state.amount = value;
 			setExchangeFromState(state);
-			setArrorAmount(Number(value) - state.balance > 0);
+			setErrorAmount(Number(value) - state.balance > 0);
 			exchangeState.balance && exchangeState.tokenAddress && handleGetAllowance(exchangeState.tokenAddress, getPairs[0]['handler'], exchangeState.decimals)
 		},
 		[exchangeFromState]
@@ -496,14 +500,21 @@ export function ExchangeModal(props: IExchangeModalProps) {
 		if(state.balance){
 			exchangeState.amount = state.amount = state.balance.toString();
 			setExchangeFromState(state);
+			setErrorAmount(false);
+			handleGetAllowance(exchangeState.tokenAddress, getPairs[0]['handler'], exchangeState.decimals);
 		}
-	}, []);
+	}, [getPairs, exchangeState]);
 
 	const handleTypeToAddress = React.useCallback((value) => {
+		if(value.trim() && isAddress(value)){
+			setErrorAddress(false);
+		} else {
+			setErrorAddress(true);
+		}
 		const state = Object.assign({}, exchangeFromState);
 		exchangeState.account =  state.account = value;
 		setExchangeFromState(state);
-	}, [exchangeFromState]);
+	}, [exchangeFromState, setErrorAddress]);
 
 	const handleConnectWallet =  React.useCallback(() => {
 		setIsConnect(true);
@@ -574,18 +585,18 @@ export function ExchangeModal(props: IExchangeModalProps) {
 					</RowVerticalEnd>
 					<CurrencyInputAsset onShowCurrentSearch={handleShowCurrentSearch} currencys={exchangeFromState} noMatch={matchChainId} />
 					<CurrencyInputAmount value={exchangeFromState.amount} onUserInput={handleTypeAmount} onMax={handleMaxInput} currencys={exchangeFromState} error={errorAmount} pairs={getPairs}/>
-					<CurrencyInputDestination value={exchangeFromState.account} onDestinationInput={handleTypeToAddress} pairs={getPairs} />
+					<CurrencyInputDestination value={exchangeFromState.account} onDestinationInput={handleTypeToAddress} pairs={getPairs} error={errorAddress} />
 					<CurrencyInputFee value={exchangeFromState.fee} pairs={getPairs}/>
 					{
 						!account ? 	<ButtonPrimary onClick={handleConnectWallet} disabled={isConnect}>
 							<span style={{marginRight: '5px'}}>{$i18n['connect']}</span>
 							{isConnect ? <Loader /> : null}
 						</ButtonPrimary> : isApprove ?
-							<ButtonPrimary onClick={handleApprove} disabled={approvePending || errRuleChainId || !Number(exchangeFromState.amount) || errorAmount}>
+							<ButtonPrimary onClick={handleApprove} disabled={approvePending || errRuleChainId || !Number(exchangeFromState.amount) || errorAmount || errorAddress || allowanceLoading}>
 								<span style={{marginRight: '5px'}}>{$i18n['approve']}</span>
 								{approvePending ? <Loader /> : null}
 							</ButtonPrimary>
-							: <ButtonPrimary onClick={handleWillReceive} disabled={matchChainId || errRuleChainId || !Number(exchangeFromState.amount) || errorAmount}>{$i18n['next']}</ButtonPrimary>
+							: <ButtonPrimary onClick={handleWillReceive} disabled={matchChainId || errRuleChainId || !Number(exchangeFromState.amount) || errorAmount || errorAddress || allowanceLoading}>{$i18n['next']}</ButtonPrimary>
 					}
 
 					{

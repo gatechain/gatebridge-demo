@@ -27,6 +27,7 @@ declare const _default: {
         notMatch: string;
         noOrders: string;
         network: string;
+        errorAddress: string;
     };
     zh: {
         from: string;
@@ -56,6 +57,7 @@ declare const _default: {
         notMatch: string;
         noOrders: string;
         network: string;
+        errorAddress: string;
     };
 };
 export default _default;

@@ -26,6 +26,7 @@ declare const _default: {
     notMatch: string;
     noOrders: string;
     network: string;
+    errorAddress: string;
 };
 export default _default;
 //# sourceMappingURL=en.d.ts.map

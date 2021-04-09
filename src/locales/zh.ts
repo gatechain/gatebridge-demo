@@ -29,5 +29,6 @@ export  default  {
    'notExchanged': '当前网络无法兑换',
    'notMatch': '交易网络与您当前连接网络不一致',
    'noOrders': '暂无数据！',
-   'network': '网络'
+   'network': '网络',
+   'errorAddress': '地址不能为空或填写正确格式'
 }
