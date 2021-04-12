@@ -333,7 +333,7 @@ export function ExchangeModal(props: IExchangeModalProps) {
 			setIsApprove(false)
 		}
 		setExchangeFromState(state);
-	},[isApprove])
+	},[isApprove, exchangeFromState])
 	// api end
 
 	React.useEffect(  () => {
@@ -503,7 +503,7 @@ export function ExchangeModal(props: IExchangeModalProps) {
 			setErrorAmount(false);
 			handleGetAllowance(exchangeState.tokenAddress, getPairs[0]['handler'], exchangeState.decimals);
 		}
-	}, [getPairs, exchangeState]);
+	}, [getPairs, exchangeFromState]);
 
 	const handleTypeToAddress = React.useCallback((value) => {
 		if(value.trim() && isAddress(value)){
