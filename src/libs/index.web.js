@@ -146,6 +146,16 @@ var Bridge = /** @class */ (function () {
             });
         });
     };
+    Bridge.prototype.getTxStatus = function (hash) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.provider.getTransactionReceipt(hash)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
     Bridge.prototype.deposit = function (chainId, bridgeAddress, resourceId, recipient, fee, value) {
         return __awaiter(this, void 0, void 0, function () {
             var contract, signerContract, data, gasLimit, e_1;

@@ -138,6 +138,7 @@ const exchangeState: ICurrencys = {
 const BridgeSDK = (window as any).GtBridgeSdk.Bridge;
 let bridge: { getBalance: (arg0: string | null | undefined, arg1: any) => Promise<any>; } | null;
 let copyCurrentAssetList:IAssetParam[] = [];
+let approveIsPenddingTimer: any;
 export function ExchangeModal(props: IExchangeModalProps) {
 	const {themeColors, pairs} = props;
 	const {chainRule: getChainRule, gateLink: gateLinkUrl, supportedChainIds} = React.useContext<any>(ConfigContext);
@@ -160,7 +161,6 @@ export function ExchangeModal(props: IExchangeModalProps) {
 	const [applyStatus, setApplyStatus] =  React.useState(false);
 	const [errorAddress, setErrorAddress] =  React.useState(false);
 	const [allowanceLoading, setAllowanceLoading] =  React.useState(false);
-
 
 	React.useEffect(() => {
 		handleCheckRuleChains(getPairs[0], getPairs[1]);
@@ -205,23 +205,119 @@ export function ExchangeModal(props: IExchangeModalProps) {
 		}
 	},[])
 
+	const saveApproveHash = React.useCallback((hash) => {
+		const object = localStorage.getItem('approvePenddings');
+		const exchange =  getPairs[0].chainId + '->' + getPairs[1].chainId;
+		if(object){
+			const parse = JSON.parse(object);
+			if(parse){
+				const accounts =  parse[exchangeFromState.account];
+				if(accounts){
+					if(!accounts[exchange]){
+						accounts[exchange] = hash;
+					}
+				} else {
+					parse[exchangeFromState.account] = {};
+					parse[exchangeFromState.account][exchange] = hash;
+				}
+
+				localStorage.setItem('approvePenddings', JSON.stringify(parse));
+			}
+		} else {
+			const obj = {};
+			obj[exchangeFromState.account] = {};
+			obj[exchangeFromState.account][exchange] = hash;
+			localStorage.setItem('approvePenddings', JSON.stringify(obj));
+		}
+	}, [getPairs]);
+
+
+
+	const getApproveHash = React.useCallback(() => {
+		const object = localStorage.getItem('approvePenddings');
+		const exchange =  getPairs[0].chainId + '->' + getPairs[1].chainId;
+		if(object){
+			const parse = JSON.parse(object);
+			if(parse){
+				const accounts =  parse[exchangeFromState.account];
+				if( accounts){
+					return accounts[exchange]
+				}
+				return null;
+			}
+			return null
+		} else {
+			return null;
+		}
+	}, [getPairs]);
+
+	const deleteApproveHash = React.useCallback(() => {
+		const object = localStorage.getItem('approvePenddings');
+		const exchange =  getPairs[0].chainId + '->' + getPairs[1].chainId;
+		if(object){
+			const parse = JSON.parse(object);
+			if(parse){
+				const accounts =  parse[exchangeFromState.account];
+				if( accounts){
+					delete accounts[exchange];
+					localStorage.setItem('approvePenddings', JSON.stringify(parse));
+				}
+			}
+		}
+	}, [getPairs]);
+
+	const checkApproveIsPendding = React.useCallback((delay: number) => {
+		approveIsPenddingTimer && clearInterval(approveIsPenddingTimer);
+		const hash = getApproveHash();
+
+		if(!hash) {
+			setIsApprove(true);// approve button
+			setAllowanceLoading(false);
+			return;
+		}
+
+		const handle = async function () {
+			const result = await handleCheckApprove(hash);
+			if(result){
+				approveIsPenddingTimer && clearInterval(approveIsPenddingTimer);
+				setAllowanceLoading(false);
+				if(result.status){
+					setIsApprove(false);
+				} else {
+					setIsApprove(true);
+				}
+				deleteApproveHash();
+			}
+		}
+		handle();
+		approveIsPenddingTimer = setInterval(handle, delay);
+	}, [getApproveHash, deleteApproveHash])
+
 	const handleGetAllowance = React.useCallback(async (token: string, handler:string, decimals: number) => {
 		if(bridge){
 			setAllowanceLoading(true);
-			let amountVal =  new BigNumber(Number(exchangeState.amount)).multipliedBy(decimals).toString(10);
-			const result =  await (bridge as any).getAllowance(token, handler);
-			setIsApprove(Number(result.toString()) - Number(amountVal) < 0);
-			setAllowanceLoading(false);
+			let amountVal = new BigNumber(Number(exchangeState.amount)).multipliedBy(decimals).toString(10);
+			const result = await (bridge as any).getAllowance(token, handler);
+			const flag = Number(result.toString()) - Number(amountVal) < 0;
+			if(flag){
+				checkApproveIsPendding(3000);
+			} else {
+				setAllowanceLoading(false);
+			}
 		}
-	},[])
+	},[checkApproveIsPendding])
 
 	const handleSendApprove = React.useCallback(async (token: string, handler:string, decimals: number) => {
 		if(bridge){
 			try{
 				const result =  await (bridge as any).approve(token, handler, MaxUint256);
 				if(result && result.hash){
-					setIsApprove(false)
-					setApprovePending(false);
+					setIsApprove(false);
+					// approve hash
+					setAllowanceLoading(true);
+					saveApproveHash(result.hash);
+					checkApproveIsPendding(3000);
+					// approve hash
 
 					setMessageState({
 						msg: 'success hash:' + result.hash
@@ -237,7 +333,18 @@ export function ExchangeModal(props: IExchangeModalProps) {
 
 			hideMessage();
 		}
-	},[])
+	},[saveApproveHash])
+
+
+
+	const handleCheckApprove = React.useCallback(async(hash: string) => {
+		try {
+			return await (bridge as any).getTxStatus(hash);
+		}catch (error) {
+			console.log(error)
+		}
+	}, []);
+
 
 	const handleSendDeposit = React.useCallback(async (chainId: number | undefined, bridgeAddress: string, resourceId:string, recipient: string, fee:string, value:string) => {
 		if(bridge){
@@ -332,6 +439,7 @@ export function ExchangeModal(props: IExchangeModalProps) {
 		if(isApprove){
 			setIsApprove(false)
 		}
+		approveIsPenddingTimer && clearInterval(approveIsPenddingTimer);
 		setExchangeFromState(state);
 	},[isApprove, exchangeFromState])
 	// api end
@@ -360,7 +468,7 @@ export function ExchangeModal(props: IExchangeModalProps) {
 		}
 
 		getAssetList(getPairs[0]['assetList']);
-	}, [chainId, getPairs])
+	}, [chainId, getPairs, account])
 
 	const handleCheckRuleChains = React.useCallback((onePair, twoPair) => {
 		const ruleKey = onePair['chainId'] + '->' + twoPair['chainId'];
@@ -491,6 +599,7 @@ export function ExchangeModal(props: IExchangeModalProps) {
 			exchangeState.amount = state.amount = value;
 			setExchangeFromState(state);
 			setErrorAmount(Number(value) - state.balance > 0);
+
 			exchangeState.balance && exchangeState.tokenAddress && handleGetAllowance(exchangeState.tokenAddress, getPairs[0]['handler'], exchangeState.decimals)
 		},
 		[exchangeFromState]
@@ -596,7 +705,10 @@ export function ExchangeModal(props: IExchangeModalProps) {
 								<span style={{marginRight: '5px'}}>{$i18n['approve']}</span>
 								{approvePending ? <Loader /> : null}
 							</ButtonPrimary>
-							: <ButtonPrimary onClick={handleWillReceive} disabled={matchChainId || errRuleChainId || !Number(exchangeFromState.amount) || errorAmount || errorAddress || allowanceLoading}>{$i18n['next']}</ButtonPrimary>
+							: <ButtonPrimary onClick={handleWillReceive} disabled={matchChainId || errRuleChainId || !Number(exchangeFromState.amount) || errorAmount || errorAddress || allowanceLoading}>
+								<span style={{marginRight: '5px'}}>{$i18n['next']}</span>
+								{allowanceLoading ? <Loader /> : null}
+							</ButtonPrimary>
 					}
 
 					{
