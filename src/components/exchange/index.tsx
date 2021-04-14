@@ -207,7 +207,7 @@ export function ExchangeModal(props: IExchangeModalProps) {
 
 	const saveApproveHash = React.useCallback((hash) => {
 		const object = localStorage.getItem('approvePenddings');
-		const exchange =  getPairs[0].chainId + '->' + getPairs[1].chainId;
+		const exchange = exchangeState.tokenAddress;
 		if(object){
 			const parse = JSON.parse(object);
 			if(parse){
@@ -235,7 +235,7 @@ export function ExchangeModal(props: IExchangeModalProps) {
 
 	const getApproveHash = React.useCallback(() => {
 		const object = localStorage.getItem('approvePenddings');
-		const exchange =  getPairs[0].chainId + '->' + getPairs[1].chainId;
+		const exchange = exchangeState.tokenAddress;
 		if(object){
 			const parse = JSON.parse(object);
 			if(parse){
@@ -253,7 +253,7 @@ export function ExchangeModal(props: IExchangeModalProps) {
 
 	const deleteApproveHash = React.useCallback(() => {
 		const object = localStorage.getItem('approvePenddings');
-		const exchange =  getPairs[0].chainId + '->' + getPairs[1].chainId;
+		const exchange = exchangeState.tokenAddress;
 		if(object){
 			const parse = JSON.parse(object);
 			if(parse){
@@ -281,11 +281,7 @@ export function ExchangeModal(props: IExchangeModalProps) {
 			if(result){
 				approveIsPenddingTimer && clearInterval(approveIsPenddingTimer);
 				setAllowanceLoading(false);
-				if(result.status){
-					setIsApprove(false);
-				} else {
-					setIsApprove(true);
-				}
+				setIsApprove(!result.status);// status: 1 成功， 0 失败
 				deleteApproveHash();
 			}
 		}
