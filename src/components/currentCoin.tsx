@@ -141,7 +141,7 @@ const CurrentCoin = function({current,errorChainId, other, changeNetWork }: {cur
 			 isActive ? <ChainPool>{
 				 poolList.map((item: IPairParam, index) => {
 					 return <ChainItem key={index} onMouseDown={() => changeNetWork(item, currChainId)}>
-						 {logo ? <CImageMini src={logo}  /> : <HelpCircle size={20} color={theme.text6} strokeWidth={1} />}
+						 {item.logo ? <CImageMini src={item.logo}  /> : <HelpCircle size={20} color={theme.text6} strokeWidth={1} />}
 						 {item.name} {$i18n['network']}
 					 </ChainItem>
 				 })

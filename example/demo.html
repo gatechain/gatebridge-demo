@@ -9,201 +9,207 @@
 <!--<script src="../dist/index.js"></script>-->
 <script>
 	console.log(GateBridgeDemo);
-	const gateBridge = new window.GateBridgeDemo.default({
-		assetApplyLink: 'https://www.gateio.pro',
-		gateLink: 'https://www.gateio.pro',
-		chainRule: { // 跨链白名单
-			'1->66': {
-				tips: '',
-				destChainId: 78
-			},
-			'66->1': {
-				tips:'Gate.io has supported asset exchange between different chains with lower service fees. Deposit your asset and withdraw what you want.',
-				destChainId: 5
-			},
-			'5->1337': {
-				tips: '',
-			},
-			'1337->5': {
-				tips: '',
-			}
-		},
-		supportedChainIds: [1, 3, 4, 5, 42, 1337, 66],
-		chainPool: [
-			{
-				name: 'Ethereum',
-				chainId: 1,
-				symbol: 'ETH',
-				logo:  '',
-				bridgeAddress: '0x208e6fb62971a016B683c47bb330FF7750B7e014',
-				handler: '0xdc61B0d03535740674784A9f027b1539A41a0Cf8',
-				decimals: 18,
-				assetList: [
-					{
-						address: "0xdac17f958d2ee523a2206206994597c13d831ec7",
-						decimals: "6",
-						logo: "/token_icon/usdt.png",
-						name: "USDT",
-						symbol: "USDT"
-					},
-					{
-						address: "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
-						decimals: "8",
-						logo: "/token_icon/wbtc.png",
-						name: "WBTC",
-						symbol: "WBTC",
-					}
-				]
-			},
-			{
-				name: 'GateChain',
-				chainId: 66,
-				symbol: 'GT',
-				logo:  '',
-				decimals: 18,
-				bridgeAddress: '0x830C57Bc09f137eF2cFC7c3797aA62FDA071c94A',
-				handler: '0x417306de14Bf393DF5d747ee555F8D4d2C3c3D83',
-				assetList: [
-					{
-						symbol: "WENUS",
-						name: "wenus",
-						logo: '',
-						decimals: "18",
-						address: '0x2d2490D29DBBCC0751033A76fE7906D63140Ce2d'
-					},
-				]
-			},
-			{
-				name: 'Ropsten',
-				chainId: 3,
-				symbol: 'ETH',
-				logo:  '',
-				decimals: 18,
-				bridgeAddress: '0x830C57Bc09f137eF2cFC7c3797aA62FDA071c94A',
-				handler: '0x417306de14Bf393DF5d747ee555F8D4d2C3c3D83',
-				assetList: []
-			},
-			{
-				name: 'Kovan',
-				chainId: 42,
-				symbol: 'ETH',
-				logo:  '',
-				decimals: 18,
-				bridgeAddress: '0x830C57Bc09f137eF2cFC7c3797aA62FDA071c94A',
-				handler: '0x417306de14Bf393DF5d747ee555F8D4d2C3c3D83',
-				assetList: [
-					{
-						symbol: "WENUS",
-						name: "wenus",
-						logo: '',
-						decimals: "18",
-						address: '0x2d2490D29DBBCC0751033A76fE7906D63140Ce2d'
-					},
-				]
-			},
-			{
-				name: 'Rinkeby',
-				chainId: 4,
-				symbol: 'ETH',
-				logo:  '',
-				decimals: 18,
-				bridgeAddress: '0x830C57Bc09f137eF2cFC7c3797aA62FDA071c94A',
-				handler: '0x417306de14Bf393DF5d747ee555F8D4d2C3c3D83',
-				assetList: [
-					{
-						symbol: "WENUS",
-						name: "wenus",
-						logo: '',
-						decimals: "18",
-						address: '0x2d2490D29DBBCC0751033A76fE7906D63140Ce2d'
-					},
-				]
-			},
-		],
-		pairs: [
-			// {
-			// 	bridgeAddress: "0x208e6fb62971a016B683c47bb330FF7750B7e014",
-			// 	chainId: 1,
-			// 	decimals: 18,
-			// 	handler: "0xdc61B0d03535740674784A9f027b1539A41a0Cf8",
-			// 	logo: "https://dev.hipo.com/token_icon/eth.png",
-			// 	name: "Ethereum",
-			// 	symbol: "ETH",
-			// 	assetList: [
-			// 		{
-			// 			address: "0xdac17f958d2ee523a2206206994597c13d831ec7",
-			// 			decimals: "6",
-			// 			logo: "/token_icon/usdt.png",
-			// 			name: "USDT",
-			// 			symbol: "USDT"
-			// 		},
-			// 		{
-			// 			address: "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
-			// 			decimals: "8",
-			// 			logo: "/token_icon/wbtc.png",
-			// 			name: "WBTC",
-			// 			symbol: "WBTC",
-			// 		}
-			// 	]
-			// },
-			// {
-			// 	bridgeAddress: "0x576857EDA81d93984E15971003A28b43F45d2f29",
-			// 	chainId: 66,
-			// 	decimals: 18,
-			// 	handler: "0xdf63Aa2D7c2565a6073cf7f8dfEcbBce93355aBB",
-			// 	logo: "/token_icon/gt.png",
-			// 	name: "GateChain",
-			// 	symbol: "GT",
-			// 	assetList: [
-			// 		{
-			// 			address: "0x17a820d71eaedbd6545d9e47e02f75aadaa9626d",
-			// 			decimals: "18",
-			// 			logo: "/token_icon/td.png",
-			// 			name: "TD",
-			// 			symbol: "TD"
-			// 		},
-			// 	]
-			// },
-			
-			{
-				name: 'Ethereum',
-				chainId: 5,
-				symbol: 'ETH',
-				logo:  '',
-				bridgeAddress: '0x219e350a5b58612BF968aa1F5aFF1e52856d687a',
-				handler: '0x8922A6e52c35982cA598c4d1a725eE3775127ABa',
-				decimals: 18,
-				assetList: [
-					{
-						symbol: "WENUS",
-						name: "wenus",
-						logo: '',
-						decimals: "18",
-						address: '0xaFF4481D10270F50f203E0763e2597776068CBc5'
-					},
-				]
-			},
-			{
-				name: 'GateChain',
-				chainId: 1337,
-				symbol: 'GT',
-				logo:  '',
-				decimals: 18,
-				bridgeAddress: '0x830C57Bc09f137eF2cFC7c3797aA62FDA071c94A',
-				handler: '0x417306de14Bf393DF5d747ee555F8D4d2C3c3D83',
-				assetList: [
-					{
-						symbol: "WENUS",
-						name: "wenus",
-						logo: '',
-						decimals: "18",
-						address: '0x2d2490D29DBBCC0751033A76fE7906D63140Ce2d'
-					},
-				]
-			},
-			
-		]
-	});
+	const data = {"code":0,"data":{"assetApplyLink":"http:\/\/gatescan.org\/bridge","gateLink":"https:\/\/www.gateio.ch","chainRule":{"1->66":{"tips":"","destChainId":66},"66->1":{"destChainId":1},"5->1337":{"destChainId":77},"1337->5":{"destChainId":5},"97->1337":{"destChainId":77},"1337->97":[],"256->1337":{"destChainId":77},"1337->256":{"destChainId":255}},"supportedChainIds":[1,3,4,5,42,1337,66,77,97,256,255],"chainPool":[{"name":"Ethereum","chainId":1,"symbol":"ETH","logo":"\/token_icon\/eth.png","bridgeAddress":"0x208e6fb62971a016B683c47bb330FF7750B7e014","handler":"0xdc61B0d03535740674784A9f027b1539A41a0Cf8","decimals":18,"assetList":[{"address":"0xdac17f958d2ee523a2206206994597c13d831ec7","decimals":"6","logo":"token_icon\/usdt.png","name":"USDT","symbol":"USDT"},{"address":"0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599","decimals":"8","logo":"token_icon\/wbtc.png","name":"WBTC","symbol":"WBTC"}]},{"name":"GateChain","chainId":66,"logo":"\/token_icon\/gt.png","bridgeAddress":"0x576857EDA81d93984E15971003A28b43F45d2f29","handler":"0xdf63Aa2D7c2565a6073cf7f8dfEcbBce93355aBB","decimals":18,"assetList":[{"address":"0x9a837c3cab572a35eD8DC9CC79184690c63e0146","decimals":"6","logo":"token_icon\/usdt.png","name":"USDT","symbol":"USDT"},{"address":"0x949Da4A6f44b4C77F17D279F7e33132920798F13","decimals":"8","logo":"token_icon\/wbtc.png","name":"WBTC","symbol":"WBTC"}]},{"name":"Goerli","symbol":"ETH","chainId":5,"logo":"\/token_icon\/gt.png","bridgeAddress":"0x208e6fb62971a016B683c47bb330FF7750B7e014","handler":"0xdc61B0d03535740674784A9f027b1539A41a0Cf8","decimals":18,"assetList":[{"address":"0x576857EDA81d93984E15971003A28b43F45d2f29","decimals":"18","name":"cross01","symbol":"cross01"}]},{"name":"Meteora","symbol":"GT","chainId":1337,"logo":"\/token_icon\/gt.png","bridgeAddress":"0xdc61b0d03535740674784a9f027b1539a41a0cf8","handler":"0x576857eda81d93984e15971003a28b43f45d2f29","decimals":18,"assetList":[{"address":"0xdf63aa2d7c2565a6073cf7f8dfecbbce93355abb","decimals":"18","logo":"","name":"cross01","symbol":"cross01"}]},{"name":"BSC-TEST","symbol":"BNB","chainId":97,"logo":"","bridgeAddress":"0xe0Ae69AEC98332945358Acf76485DD4332f5b720","handler":"0x4075EaBf2E49bc77345fE8630513912f137A0377","decimals":18,"assetList":[{"address":"0x908f59a2c58404287C28a15be73B3f0358e2537f","decimals":"18","logo":"token_icon\/usdt.png","name":"USDT","symbol":"USDT"}]},{"name":"HECO-TEST","symbol":"HT","chainId":256,"logo":"","bridgeAddress":"0x69499E773B6030ea7885aA785fde7cDEB58ED7d5","handler":"0x1dDAebDc7a9014cc272C49AED409B6616b057E7E","decimals":18,"assetList":[{"address":"0x908f59a2c58404287C28a15be73B3f0358e2537f","decimals":"18","logo":"token_icon\/usdt.png","name":"USDT","symbol":"USDT"}]}],"pairs":[{"name":"Ethereum","chainId":1,"symbol":"ETH","logo":"\/token_icon\/eth.png","bridgeAddress":"0x208e6fb62971a016B683c47bb330FF7750B7e014","handler":"0xdc61B0d03535740674784A9f027b1539A41a0Cf8","decimals":18,"assetList":[{"symbol":"USDT","logo":"\/token_icon\/usdt.png","name":"USDT","decimals":"6","address":"0xdac17f958d2ee523a2206206994597c13d831ec7"},{"symbol":"WBTC","logo":"\/token_icon\/wbtc.png","name":"WBTC","decimals":"8","address":"0x2260fac5e5542a773aa44fbcfedf7c193bc2c599"}]},{"name":"GateChain","chainId":66,"symbol":"GT","logo":"\/token_icon\/gt.png","bridgeAddress":"0x576857EDA81d93984E15971003A28b43F45d2f29","handler":"0xdf63Aa2D7c2565a6073cf7f8dfEcbBce93355aBB","decimals":18,"assetList":[{"symbol":"TD","logo":"\/token_icon\/td.png","name":"TD","decimals":"18","address":"0x17a820d71eaedbd6545d9e47e02f75aadaa9626d"}]}]}};
+	const gateBridge = new window.GateBridgeDemo.default(
+		{
+		...data.data
+		}
+	// 	assetApplyLink: 'https://www.gateio.pro',
+	// 	gateLink: 'https://www.gateio.pro',
+	// 	chainRule: { // 跨链白名单
+	// 		'1->66': {
+	// 			tips: '',
+	// 			destChainId: 78
+	// 		},
+	// 		'66->1': {
+	// 			tips:'Gate.io has supported asset exchange between different chains with lower service fees. Deposit your asset and withdraw what you want.',
+	// 			destChainId: 5
+	// 		},
+	// 		'5->1337': {
+	// 			tips: '',
+	// 			destChainId: 77
+	// 		},
+	// 		'1337->5': {
+	// 			tips: '',
+	// 		}
+	// 	},
+	// 	supportedChainIds: [1, 3, 4, 5, 42, 1337, 66],
+	// 	chainPool: [
+	// 		{
+	// 			name: 'Ethereum',
+	// 			chainId: 1,
+	// 			symbol: 'ETH',
+	// 			logo:  '',
+	// 			bridgeAddress: '0x208e6fb62971a016B683c47bb330FF7750B7e014',
+	// 			handler: '0xdc61B0d03535740674784A9f027b1539A41a0Cf8',
+	// 			decimals: 18,
+	// 			assetList: [
+	// 				{
+	// 					address: "0xdac17f958d2ee523a2206206994597c13d831ec7",
+	// 					decimals: "6",
+	// 					logo: "/token_icon/usdt.png",
+	// 					name: "USDT",
+	// 					symbol: "USDT"
+	// 				},
+	// 				{
+	// 					address: "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
+	// 					decimals: "8",
+	// 					logo: "/token_icon/wbtc.png",
+	// 					name: "WBTC",
+	// 					symbol: "WBTC",
+	// 				}
+	// 			]
+	// 		},
+	// 		{
+	// 			name: 'GateChain',
+	// 			chainId: 66,
+	// 			symbol: 'GT',
+	// 			logo:  '',
+	// 			decimals: 18,
+	// 			bridgeAddress: '0x830C57Bc09f137eF2cFC7c3797aA62FDA071c94A',
+	// 			handler: '0x417306de14Bf393DF5d747ee555F8D4d2C3c3D83',
+	// 			assetList: [
+	// 				{
+	// 					symbol: "WENUS",
+	// 					name: "wenus",
+	// 					logo: '',
+	// 					decimals: "18",
+	// 					address: '0x2d2490D29DBBCC0751033A76fE7906D63140Ce2d'
+	// 				},
+	// 			]
+	// 		},
+	// 		{
+	// 			name: 'Ropsten',
+	// 			chainId: 3,
+	// 			symbol: 'ETH',
+	// 			logo:  '',
+	// 			decimals: 18,
+	// 			bridgeAddress: '0x830C57Bc09f137eF2cFC7c3797aA62FDA071c94A',
+	// 			handler: '0x417306de14Bf393DF5d747ee555F8D4d2C3c3D83',
+	// 			assetList: []
+	// 		},
+	// 		{
+	// 			name: 'Kovan',
+	// 			chainId: 42,
+	// 			symbol: 'ETH',
+	// 			logo:  '',
+	// 			decimals: 18,
+	// 			bridgeAddress: '0x830C57Bc09f137eF2cFC7c3797aA62FDA071c94A',
+	// 			handler: '0x417306de14Bf393DF5d747ee555F8D4d2C3c3D83',
+	// 			assetList: [
+	// 				{
+	// 					symbol: "WENUS",
+	// 					name: "wenus",
+	// 					logo: '',
+	// 					decimals: "18",
+	// 					address: '0x2d2490D29DBBCC0751033A76fE7906D63140Ce2d'
+	// 				},
+	// 			]
+	// 		},
+	// 		{
+	// 			name: 'Rinkeby',
+	// 			chainId: 4,
+	// 			symbol: 'ETH',
+	// 			logo:  '',
+	// 			decimals: 18,
+	// 			bridgeAddress: '0x830C57Bc09f137eF2cFC7c3797aA62FDA071c94A',
+	// 			handler: '0x417306de14Bf393DF5d747ee555F8D4d2C3c3D83',
+	// 			assetList: [
+	// 				{
+	// 					symbol: "WENUS",
+	// 					name: "wenus",
+	// 					logo: '',
+	// 					decimals: "18",
+	// 					address: '0x2d2490D29DBBCC0751033A76fE7906D63140Ce2d'
+	// 				},
+	// 			]
+	// 		},
+	// 	],
+	// 	pairs: [
+	// 		// {
+	// 		// 	bridgeAddress: "0x208e6fb62971a016B683c47bb330FF7750B7e014",
+	// 		// 	chainId: 1,
+	// 		// 	decimals: 18,
+	// 		// 	handler: "0xdc61B0d03535740674784A9f027b1539A41a0Cf8",
+	// 		// 	logo: "https://dev.hipo.com/token_icon/eth.png",
+	// 		// 	name: "Ethereum",
+	// 		// 	symbol: "ETH",
+	// 		// 	assetList: [
+	// 		// 		{
+	// 		// 			address: "0xdac17f958d2ee523a2206206994597c13d831ec7",
+	// 		// 			decimals: "6",
+	// 		// 			logo: "/token_icon/usdt.png",
+	// 		// 			name: "USDT",
+	// 		// 			symbol: "USDT"
+	// 		// 		},
+	// 		// 		{
+	// 		// 			address: "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
+	// 		// 			decimals: "8",
+	// 		// 			logo: "/token_icon/wbtc.png",
+	// 		// 			name: "WBTC",
+	// 		// 			symbol: "WBTC",
+	// 		// 		}
+	// 		// 	]
+	// 		// },
+	// 		// {
+	// 		// 	bridgeAddress: "0x576857EDA81d93984E15971003A28b43F45d2f29",
+	// 		// 	chainId: 66,
+	// 		// 	decimals: 18,
+	// 		// 	handler: "0xdf63Aa2D7c2565a6073cf7f8dfEcbBce93355aBB",
+	// 		// 	logo: "/token_icon/gt.png",
+	// 		// 	name: "GateChain",
+	// 		// 	symbol: "GT",
+	// 		// 	assetList: [
+	// 		// 		{
+	// 		// 			address: "0x17a820d71eaedbd6545d9e47e02f75aadaa9626d",
+	// 		// 			decimals: "18",
+	// 		// 			logo: "/token_icon/td.png",
+	// 		// 			name: "TD",
+	// 		// 			symbol: "TD"
+	// 		// 		},
+	// 		// 	]
+	// 		// },
+	//
+	// 		{
+	// 			name: 'Ethereum',
+	// 			chainId: 5,
+	// 			symbol: 'ETH',
+	// 			logo:  '',
+	// 			bridgeAddress: '0x219e350a5b58612BF968aa1F5aFF1e52856d687a',
+	// 			handler: '0x8922A6e52c35982cA598c4d1a725eE3775127ABa',
+	// 			decimals: 18,
+	// 			assetList: [
+	// 				{
+	// 					symbol: "WENUS",
+	// 					name: "wenus",
+	// 					logo: '',
+	// 					decimals: "18",
+	// 					address: '0xaFF4481D10270F50f203E0763e2597776068CBc5'
+	// 				},
+	// 			]
+	// 		},
+	// 		{
+	// 			name: 'GateChain',
+	// 			chainId: 1337,
+	// 			symbol: 'GT',
+	// 			logo:  '',
+	// 			decimals: 18,
+	// 			bridgeAddress: '0x830C57Bc09f137eF2cFC7c3797aA62FDA071c94A',
+	// 			handler: '0x417306de14Bf393DF5d747ee555F8D4d2C3c3D83',
+	// 			assetList: [
+	// 				{
+	// 					symbol: "WENUS",
+	// 					name: "wenus",
+	// 					logo: '',
+	// 					decimals: "18",
+	// 					address: '0x2d2490D29DBBCC0751033A76fE7906D63140Ce2d'
+	// 				},
+	// 			]
+	// 		},
+	//
+	// 	]
+	// }
+	);
 	
 	gateBridge.renderExchange();
 	
